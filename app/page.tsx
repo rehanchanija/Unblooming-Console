@@ -172,7 +172,10 @@ export default function SinglePageStore() {
       </section>
 
       {/* 5. OUR PROMISES SECTION */}
-      <section className="py-24 bg-white text-gray-900 border-t border-gray-100" id="policy">
+      <section
+        className="py-24 bg-white text-gray-900 border-t border-gray-100"
+        id="policy"
+      >
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
             <div className="space-y-3 md:space-y-4 group">
@@ -287,22 +290,22 @@ export default function SinglePageStore() {
             </div>
             <div className="flex flex-col space-y-3 text-sm font-medium text-gray-600">
               <a
-                href="mailto:support@unblooming.com"
+                href="mailto:unbloomingsupport@gmail.com"
                 className="flex items-center space-x-3 hover:text-orange-500 transition-colors bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
               >
                 <span className="text-lg">📧</span>
-                <span>support@unblooming.com</span>
+                <span>unbloomingsupport@gmail.com</span>
               </a>
               <a
-                href="tel:+919876543210"
+                href="tel:+916265562258"
                 className="flex items-center space-x-3 hover:text-orange-500 transition-colors bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
               >
                 <span className="text-lg">📞</span>
-                <span>+91 98765 43210</span>
+                <span>+91 62655 62258</span>
               </a>
-              <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                <span className="text-lg">📍</span>
-                <span>123 Innovation Drive, Tech Park</span>
+              <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <span className="text-lg shrink-0">📍</span>
+                <span className="truncate" title="Sadar Bazar, Bhatapara, Raipur, Chhattisgarh">Sadar Bazar, Bhatapara, Raipur, Chhattisgarh</span>
               </div>
             </div>
           </div>
