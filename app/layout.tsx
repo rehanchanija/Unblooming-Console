@@ -25,7 +25,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UNBLOOMING",
+  title: {
+    template: '%s | UNBLOOMING',
+    default: 'UNBLOOMING | Premium Retro Handheld Console',
+  },
   description:
     "UNBLOOMING is a premium retro handheld gaming console with 10,000+ games, 64GB storage, blazing-fast emulation, and a stunning IPS display. Relive retro gaming, reimagined.",
   keywords: [
@@ -36,7 +39,7 @@ export const metadata: Metadata = {
     "buy retro console",
   ],
   openGraph: {
-    title: "UNBLOOMING",
+    title: "UNBLOOMING | Premium Retro Handheld Console",
     description:
       "UNBLOOMING is a premium retro handheld gaming console with 10,000+ games, 64GB storage, blazing-fast emulation, and a stunning IPS display. Relive retro gaming, reimagined.",
     type: "website",
