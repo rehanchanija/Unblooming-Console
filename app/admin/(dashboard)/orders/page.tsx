@@ -33,8 +33,8 @@ export default function AdminOrders() {
         </div>
       </div>
       
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <table className="w-full text-left">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+        <table className="w-full text-left min-w-[700px]">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="px-6 py-4 font-bold text-gray-700 text-sm">Order ID</th>
