@@ -33,8 +33,42 @@ export default function AdminOrders() {
         </div>
       </div>
       
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
-        <table className="w-full text-left min-w-[700px]">
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {filteredOrders.map((order) => (
+          <div key={order.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg leading-tight">{order.id}</h3>
+                <p className="font-medium text-gray-700 text-sm mt-1">{order.customer}</p>
+              </div>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                order.status === 'Shipped' ? 'bg-blue-100 text-blue-700' :
+                order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                'bg-red-100 text-red-700'
+              }`}>
+                {order.status}
+              </span>
+            </div>
+            <div className="flex flex-col space-y-1 text-sm text-gray-500">
+              <p><span className="font-semibold text-gray-700">Product:</span> {order.productName}</p>
+              <p><span className="font-semibold text-gray-700">Date:</span> {order.date}</p>
+              <p><span className="font-semibold text-gray-700">Total:</span> <span className="text-gray-900 font-bold">{order.total}</span></p>
+            </div>
+            <div className="pt-3 border-t border-gray-50 flex justify-end">
+              <button className="text-blue-500 hover:text-blue-700 font-bold text-sm">View & Update</button>
+            </div>
+          </div>
+        ))}
+        {filteredOrders.length === 0 && (
+          <div className="text-center py-8 text-gray-500">No orders found.</div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="px-6 py-4 font-bold text-gray-700 text-sm">Order ID</th>
