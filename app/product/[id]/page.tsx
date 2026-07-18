@@ -83,14 +83,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </p>
 
             <div className="pt-6 border-t border-gray-200">
-              <button 
-                onClick={handleAddToCart}
-                className="w-full bg-orange-600 hover:bg-orange-500 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_0_20px_rgba(234,88,12,0.3)] transition-transform hover:-translate-y-1 flex items-center justify-center space-x-3"
-              >
-                <span>Add to Cart</span>
-                <span>🛒</span>
-              </button>
-              <div className="mt-4 flex justify-center space-x-6 text-sm font-bold text-gray-400">
+              <div className="fixed bottom-0 left-0 w-full p-4 bg-white/90 backdrop-blur-md border-t border-gray-200 z-40 md:relative md:p-0 md:bg-transparent md:border-0 md:backdrop-blur-none">
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-full bg-orange-600 hover:bg-orange-500 text-white text-xl font-bold py-5 rounded-2xl shadow-xl transition-transform hover:-translate-y-1 flex items-center justify-center space-x-3"
+                >
+                  <span>Add to Cart</span>
+                  <span>🛒</span>
+                </button>
+              </div>
+              <div className="mt-4 hidden md:flex justify-center space-x-6 text-sm font-bold text-gray-400">
                 <span className="flex items-center">🚚 Free Shipping</span>
                 <span className="flex items-center">🛡️ 7-Day Returns</span>
               </div>

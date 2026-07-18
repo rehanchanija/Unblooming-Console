@@ -39,9 +39,9 @@ export default function ProductList() {
             <p className="text-gray-500 mt-2 font-medium">Swipe to explore more smart products.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full md:w-auto overflow-hidden">
             {/* Category Filter */}
-            <div className="flex space-x-2 bg-gray-100 p-1 rounded-xl">
+            <div className="flex space-x-2 bg-gray-100 p-1 rounded-xl w-full overflow-x-auto hide-scrollbar">
               {categories.map(cat => (
                 <button
                   key={cat}
