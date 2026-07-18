@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { adminApi } from '../../../../lib/adminApi';
 
 export default function AdminContact() {
   const [formData, setFormData] = useState({
@@ -9,14 +10,26 @@ export default function AdminContact() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    // Mock fetch from backend
-    setFormData({
-      email: 'unbloomingsupport@gmail.com',
-      phone: '+91 62655 62258',
-      address: 'Sadar Bazar, Bhatapara, Raipur, Chhattisgarh',
-    });
+    const fetchContactData = async () => {
+      try {
+        const data = await adminApi.get('/content/contact');
+        if (data && Object.keys(data).length > 0) {
+          setFormData({
+            email: data.email || '',
+            phone: data.phone || '',
+            address: data.address || '',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch contact info', error);
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+    fetchContactData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -27,12 +40,18 @@ export default function AdminContact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Send data to NestJS backend
-    setTimeout(() => {
+    try {
+      await adminApi.post('/content/contact', formData);
       alert('Contact settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save contact settings', error);
+      alert('Failed to save contact settings.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
+
+  if (initialLoading) return <div className="p-8">Loading...</div>;
 
   return (
     <div className="max-w-2xl">

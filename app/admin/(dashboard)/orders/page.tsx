@@ -1,21 +1,56 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { adminApi } from '../../../../lib/adminApi';
 
 export default function AdminOrders() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [orders, setOrders] = useState([
-    { id: '#ORD-001', customer: 'John Doe', date: '2026-07-18', total: '₹4,499', status: 'Pending', productName: 'R36MAX Retro Console (Transparent Purple)' },
-    { id: '#ORD-002', customer: 'Jane Smith', date: '2026-07-17', total: '₹8,998', status: 'Shipped', productName: 'R36MAX Retro Console (Black)' },
-  ]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const data = await adminApi.get('/orders');
+      setOrders(data);
+    } catch (error) {
+      console.error('Failed to fetch orders', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (id: string, currentStatus: string) => {
+    const statuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
+    const currentIndex = statuses.indexOf(currentStatus);
+    const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+    
+    if (confirm(`Change status to ${nextStatus}?`)) {
+      try {
+        await adminApi.patch(`/orders/${id}`, { status: nextStatus });
+        fetchOrders();
+      } catch (error) {
+        console.error('Failed to update status', error);
+      }
+    }
+  };
 
   const filteredOrders = orders.filter(order => {
     const q = searchQuery.toLowerCase();
+    const orderIdStr = String(order._id || order.id || '');
+    const customerStr = String(order.customer || '');
+    const productStr = String(order.productName || '');
     return (
-      order.id.toLowerCase().includes(q) ||
-      order.customer.toLowerCase().includes(q) ||
-      order.productName.toLowerCase().includes(q)
+      orderIdStr.toLowerCase().includes(q) ||
+      customerStr.toLowerCase().includes(q) ||
+      productStr.toLowerCase().includes(q)
     );
   });
+
+  if (loading) return <div className="p-8">Loading orders...</div>;
 
   return (
     <div>
@@ -36,10 +71,10 @@ export default function AdminOrders() {
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {filteredOrders.map((order) => (
-          <div key={order.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
+          <div key={order._id || order.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-bold text-gray-900 text-lg leading-tight">{order.id}</h3>
+                <h3 className="font-bold text-gray-900 text-lg leading-tight">{order._id || order.id}</h3>
                 <p className="font-medium text-gray-700 text-sm mt-1">{order.customer}</p>
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -53,11 +88,11 @@ export default function AdminOrders() {
             </div>
             <div className="flex flex-col space-y-1 text-sm text-gray-500">
               <p><span className="font-semibold text-gray-700">Product:</span> {order.productName}</p>
-              <p><span className="font-semibold text-gray-700">Date:</span> {order.date}</p>
+              <p><span className="font-semibold text-gray-700">Date:</span> {new Date(order.date || order.createdAt).toLocaleDateString()}</p>
               <p><span className="font-semibold text-gray-700">Total:</span> <span className="text-gray-900 font-bold">{order.total}</span></p>
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end">
-              <button className="text-blue-500 hover:text-blue-700 font-bold text-sm">View & Update</button>
+              <button onClick={() => handleStatusUpdate(order._id || order.id, order.status)} className="text-blue-500 hover:text-blue-700 font-bold text-sm">Update Status</button>
             </div>
           </div>
         ))}
@@ -81,10 +116,10 @@ export default function AdminOrders() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filteredOrders.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 font-bold text-gray-900">{order.id}</td>
+              <tr key={order._id || order.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 font-bold text-gray-900">{order._id || order.id}</td>
                 <td className="px-6 py-4 font-medium text-gray-700">{order.customer}</td>
-                <td className="px-6 py-4 text-gray-500">{order.date}</td>
+                <td className="px-6 py-4 text-gray-500">{new Date(order.date || order.createdAt).toLocaleDateString()}</td>
                 <td className="px-6 py-4 font-bold text-gray-900">{order.total}</td>
                 <td className="px-6 py-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -93,11 +128,11 @@ export default function AdminOrders() {
                     order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
                     'bg-red-100 text-red-700'
                   }`}>
-                    {order.status}
+                    {order.status || 'Pending'}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium">View & Update</button>
+                  <button onClick={() => handleStatusUpdate(order._id || order.id, order.status)} className="text-blue-500 hover:text-blue-700 font-medium">Update Status</button>
                 </td>
               </tr>
             ))}

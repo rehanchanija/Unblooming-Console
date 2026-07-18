@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { adminApi } from '../../../../lib/adminApi';
 
 export default function AdminHero() {
   const [formData, setFormData] = useState({
@@ -10,16 +11,27 @@ export default function AdminHero() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
-  // In the future, we will fetch the initial data from the NestJS backend
   useEffect(() => {
-    // Mock fetch
-    setFormData({
-      title: 'Classic gaming, modernized.',
-      subtitle: 'Meet the R36MAX. The ultimate retro handheld gaming console with a stunning IPS display and 18,000+ pre-loaded games ready to play.',
-      buttonText: 'Order Now',
-      buttonPrice: '₹4,499'
-    });
+    const fetchHeroData = async () => {
+      try {
+        const data = await adminApi.get('/content/hero');
+        if (data && Object.keys(data).length > 0) {
+          setFormData({
+            title: data.title || '',
+            subtitle: data.subtitle || '',
+            buttonText: data.buttonText || '',
+            buttonPrice: data.buttonPrice || '',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch hero content', error);
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+    fetchHeroData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,12 +42,18 @@ export default function AdminHero() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Send data to NestJS backend
-    setTimeout(() => {
+    try {
+      await adminApi.post('/content/hero', formData);
       alert('Hero settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save hero settings', error);
+      alert('Failed to save hero settings.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
+
+  if (initialLoading) return <div className="p-8">Loading...</div>;
 
   return (
     <div className="max-w-2xl">

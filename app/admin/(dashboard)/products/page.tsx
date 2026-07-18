@@ -1,10 +1,39 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { adminApi } from '../../../../lib/adminApi';
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState([
-    { id: 1, title: 'R36MAX Retro Console', category: 'Handheld', color: 'Transparent Purple', price: '₹4,499' },
-  ]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await adminApi.get('/products');
+      setProducts(data);
+    } catch (error) {
+      console.error('Failed to fetch products', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this product?')) {
+      try {
+        await adminApi.delete(`/products/${id}`);
+        fetchProducts(); // Refresh list
+      } catch (error) {
+        console.error('Failed to delete product', error);
+      }
+    }
+  };
+
+  if (loading) return <div className="p-8">Loading products...</div>;
 
   return (
     <div>
@@ -18,9 +47,9 @@ export default function AdminProducts() {
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {products.map((product) => (
-          <div key={product.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
+          <div key={product._id || product.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
             <div className="flex justify-between items-start">
-              <h3 className="font-bold text-gray-900 text-lg leading-tight">{product.title}</h3>
+              <h3 className="font-bold text-gray-900 text-lg leading-tight">{product.title || product.name}</h3>
               <span className="font-black text-orange-500">{product.price}</span>
             </div>
             <div className="flex flex-col space-y-1 text-sm text-gray-500">
@@ -29,7 +58,7 @@ export default function AdminProducts() {
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end space-x-4">
               <button className="text-blue-500 hover:text-blue-700 font-bold text-sm">Edit</button>
-              <button className="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>
+              <button onClick={() => handleDelete(product._id || product.id)} className="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>
             </div>
           </div>
         ))}
@@ -49,14 +78,14 @@ export default function AdminProducts() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {products.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 font-medium text-gray-900">{product.title}</td>
+              <tr key={product._id || product.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-gray-900">{product.title || product.name}</td>
                 <td className="px-6 py-4 text-gray-500">{product.category}</td>
                 <td className="px-6 py-4 text-gray-500">{product.color}</td>
                 <td className="px-6 py-4 font-bold text-gray-900">{product.price}</td>
                 <td className="px-6 py-4 text-right space-x-3">
                   <button className="text-blue-500 hover:text-blue-700 font-medium">Edit</button>
-                  <button className="text-red-500 hover:text-red-700 font-medium">Delete</button>
+                  <button onClick={() => handleDelete(product._id || product.id)} className="text-red-500 hover:text-red-700 font-medium">Delete</button>
                 </td>
               </tr>
             ))}
