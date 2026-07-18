@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/lib/CartContext';
 import { MOCK_PRODUCTS } from '@/lib/data';
@@ -28,9 +29,10 @@ export default function ProductList() {
       {/* Horizontal Slider */}
       <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar px-6 pb-8 space-x-6">
         {MOCK_PRODUCTS.map((product) => (
-          <div 
+          <Link 
+            href={`/product/${product.id}`}
             key={product.id} 
-            className="flex-none w-[280px] snap-center bg-gray-50 rounded-[32px] border border-gray-100 overflow-hidden hover:border-orange-500 hover:shadow-xl transition-all duration-300 flex flex-col group"
+            className="flex-none w-[280px] snap-center bg-gray-50 rounded-[32px] border border-gray-100 overflow-hidden hover:border-orange-500 hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer"
           >
             <div className="relative aspect-square bg-[#0a0a0a] overflow-hidden m-4 rounded-[24px]">
               <Image 
@@ -51,7 +53,7 @@ export default function ProductList() {
                 <span>Add to Cart</span>
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

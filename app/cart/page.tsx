@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
-  const { items, removeFromCart, cartTotal, itemCount } = useCart();
+  const { cart: items, removeFromCart, cartTotal, itemCount } = useCart();
   const router = useRouter();
 
   if (itemCount === 0) {
