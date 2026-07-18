@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const menuItems = [
+export const menuItems = [
   { name: 'Dashboard', href: '/admin', icon: '📊' },
   { name: 'Hero Section', href: '/admin/hero', icon: '🖼️' },
   { name: 'Collection', href: '/admin/products', icon: '🛍️' },
@@ -14,15 +14,17 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen flex flex-col fixed left-0 top-0">
-      <div className="p-6 border-b border-gray-800">
-        <h2 className="text-2xl font-black tracking-tight text-white">
-          UN<span className="text-orange-500">BLOOMING</span> <br/>
-          <span className="text-sm font-medium text-gray-400">Admin Panel</span>
-        </h2>
-      </div>
+    <>
+      {/* Sidebar (Desktop Only) */}
+      <aside className="hidden md:flex w-64 bg-gray-900 text-white min-h-screen flex-col fixed left-0 top-0 z-50">
+        <div className="p-6 border-b border-gray-800 flex justify-between items-center">
+          <h2 className="text-2xl font-black tracking-tight text-white">
+            UN<span className="text-orange-500">BLOOMING</span> <br/>
+            <span className="text-sm font-medium text-gray-400">Admin Panel</span>
+          </h2>
+        </div>
 
-      <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -52,5 +54,6 @@ export default function AdminSidebar() {
         </Link>
       </div>
     </aside>
+    </>
   );
 }
