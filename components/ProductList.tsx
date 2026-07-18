@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,6 +9,18 @@ import { MOCK_PRODUCTS } from '@/lib/data';
 export default function ProductList() {
   const { addToCart } = useCart();
   const router = useRouter();
+  
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedColor, setSelectedColor] = useState('All');
+
+  const categories = ['All', 'Consoles', 'Accessories'];
+  const colors = ['All', 'Red', 'Purple', 'Black'];
+
+  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
+    const matchCategory = selectedCategory === 'All' || product.category === selectedCategory;
+    const matchColor = selectedColor === 'All' || product.color === selectedColor;
+    return matchCategory && matchColor;
+  });
 
   const handleAddToCart = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); 
@@ -19,16 +32,55 @@ export default function ProductList() {
 
   return (
     <section className="py-24 bg-white" id="products">
-      <div className="max-w-6xl mx-auto px-6 mb-12 flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Our Collection</h2>
-          <p className="text-gray-500 mt-2 font-medium">Swipe to explore more smart products.</p>
+      <div className="max-w-6xl mx-auto px-6 mb-12">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Our Collection</h2>
+            <p className="text-gray-500 mt-2 font-medium">Swipe to explore more smart products.</p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            {/* Category Filter */}
+            <div className="flex space-x-2 bg-gray-100 p-1 rounded-xl">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${selectedCategory === cat ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            
+            {/* Color Filter */}
+            <div className="flex space-x-2 items-center bg-gray-100 p-2 rounded-xl h-full">
+              <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Color</span>
+              {colors.map(color => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  title={color}
+                  className={`w-7 h-7 rounded-full border-2 transition-all ${selectedColor === color ? 'border-gray-900 scale-110 shadow-md' : 'border-transparent hover:scale-105'} flex items-center justify-center`}
+                >
+                  <span className={`w-full h-full rounded-full border border-gray-200/50 ${color === 'All' ? 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]' : color === 'Red' ? 'bg-red-500' : color === 'Purple' ? 'bg-purple-500' : 'bg-gray-900'}`}></span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       
       {/* Horizontal Slider */}
-      <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar px-6 pb-8 space-x-6">
-        {MOCK_PRODUCTS.map((product) => (
+      <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar px-6 pb-8 space-x-6 min-h-[400px]">
+        {filteredProducts.length === 0 ? (
+          <div className="w-full flex flex-col items-center justify-center py-20 text-gray-400">
+            <div className="text-5xl mb-4">🔍</div>
+            <p className="font-bold text-xl text-gray-900 mb-2">No products found</p>
+            <p className="font-medium text-gray-500">Try adjusting your filters</p>
+          </div>
+        ) : (
+          filteredProducts.map((product) => (
           <Link 
             href={`/product/${product.id}`}
             key={product.id} 
@@ -54,7 +106,8 @@ export default function ProductList() {
               </button>
             </div>
           </Link>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

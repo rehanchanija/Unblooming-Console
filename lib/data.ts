@@ -3,6 +3,8 @@ export const MOCK_PRODUCTS = [
     id: 'prod_1',
     name: 'R36MAX Retro Console (Red)',
     price: 4499,
+    category: 'Consoles',
+    color: 'Red',
     image: '/hero-r36max.png',
     gallery: [
       '/hero-r36max.png',
@@ -32,6 +34,8 @@ export const MOCK_PRODUCTS = [
     id: 'prod_2',
     name: 'R36MAX Console (Purple)',
     price: 4499,
+    category: 'Consoles',
+    color: 'Purple',
     image: '/console_purple.png',
     gallery: [
       '/console_purple.png'
@@ -57,6 +61,8 @@ export const MOCK_PRODUCTS = [
     id: 'prod_3',
     name: 'R36MAX Premium EVA Case',
     price: 799,
+    category: 'Accessories',
+    color: 'Black',
     image: '/carry_case.png',
     gallery: [
       '/carry_case.png'
@@ -77,6 +83,8 @@ export const MOCK_PRODUCTS = [
     id: 'prod_4',
     name: '128GB MicroSD Expansion',
     price: 1499,
+    category: 'Accessories',
+    color: 'Black',
     image: '/sd_card.png',
     gallery: [
       '/sd_card.png'
