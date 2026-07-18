@@ -46,7 +46,7 @@ export default function Categories() {
                 backgroundSize: "200% 100%",
               }}
             />
-            <h3 className="font-display text-lg font-bold text-white">{cat.name}</h3>
+            <h3 className="font-display text-lg font-bold text-gray-900">{cat.name}</h3>
             <p className="mt-1 font-mono text-xs text-accent">{cat.games} games</p>
           </motion.div>
         ))}

@@ -36,7 +36,7 @@ export default function Newsletter() {
           <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
             Get notified about <span className="text-gradient">drops &amp; deals</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-white/55">
+          <p className="mx-auto mt-3 max-w-md text-sm text-gray-900/55">
             Join the R36MAX community for early access to new colorways and
             exclusive discounts.
           </p>
@@ -61,7 +61,7 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="glass w-full rounded-full px-6 py-3.5 text-sm text-white placeholder:text-white/35 focus:outline-none"
+                className="glass w-full rounded-full px-6 py-3.5 text-sm text-gray-900 placeholder:text-gray-900/35 focus:outline-none"
               />
               <MagneticButton variant="primary" icon={false} className="justify-center whitespace-nowrap">
                 Notify Me

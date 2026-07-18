@@ -25,16 +25,16 @@ export default function Specifications() {
 
       <div className="mt-14 overflow-hidden rounded-2xl glass gradient-border">
         <div className="grid grid-cols-3 border-b border-borderc bg-white/5 px-4 py-4 sm:px-8">
-          <span className="font-mono text-xs uppercase text-white/50">Spec</span>
+          <span className="font-mono text-xs uppercase text-gray-900/50">Spec</span>
           <span className="font-display text-sm font-semibold text-gradient">R36MAX</span>
-          <span className="font-mono text-xs uppercase text-white/40">Others</span>
+          <span className="font-mono text-xs uppercase text-gray-900/40">Others</span>
         </div>
         {specs.map((s, i) => (
           <Reveal key={s.label} direction="left" delay={i * 0.06}>
             <div className="grid grid-cols-3 items-center border-b border-borderc/60 px-4 py-4 last:border-0 sm:px-8">
-              <span className="text-sm text-white/60">{s.label}</span>
-              <span className="text-sm font-medium text-white">{s.pulsar}</span>
-              <span className="text-sm text-white/35 line-through decoration-white/20">
+              <span className="text-sm text-gray-900/60">{s.label}</span>
+              <span className="text-sm font-medium text-gray-900">{s.pulsar}</span>
+              <span className="text-sm text-gray-900/35 line-through decoration-white/20">
                 {s.rival}
               </span>
             </div>

@@ -65,18 +65,18 @@ export default function Reviews() {
                 <span key={i}>★</span>
               ))}
             </div>
-            <p className="max-w-xl text-white/75">&ldquo;{reviews[index].text}&rdquo;</p>
+            <p className="max-w-xl text-gray-900/75">&ldquo;{reviews[index].text}&rdquo;</p>
             <div className="mt-6 flex items-center gap-3">
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary font-display text-xs font-bold text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary font-display text-xs font-bold text-gray-900"
               >
                 {reviews[index].avatar}
               </motion.div>
               <div className="text-left">
-                <p className="text-sm font-semibold text-white">{reviews[index].name}</p>
-                <p className="text-xs text-white/45">{reviews[index].role}</p>
+                <p className="text-sm font-semibold text-gray-900">{reviews[index].name}</p>
+                <p className="text-xs text-gray-900/45">{reviews[index].role}</p>
               </div>
             </div>
           </motion.div>

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
+import { AuthProvider } from "@/lib/AuthContext";
+import { CartProvider } from "@/lib/CartContext";
+import Navbar from "@/components/Navbar";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -49,8 +52,13 @@ export default function RootLayout({
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-bg font-body antialiased">
         <SmoothScrollProvider>
-          <div className="noise-overlay" aria-hidden="true" />
-          {children}
+          <AuthProvider>
+            <CartProvider>
+              <div className="noise-overlay" aria-hidden="true" />
+              <Navbar />
+              {children}
+            </CartProvider>
+          </AuthProvider>
         </SmoothScrollProvider>
       </body>
     </html>

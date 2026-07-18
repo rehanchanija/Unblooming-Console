@@ -37,7 +37,7 @@ export default function Accessories() {
             className="gradient-border glass flex flex-col items-center rounded-2xl p-6 text-center"
           >
             <span className="text-3xl">{a.icon}</span>
-            <h3 className="mt-4 font-body text-sm text-white/85">{a.name}</h3>
+            <h3 className="mt-4 font-body text-sm text-gray-900/85">{a.name}</h3>
             <p className="mt-2 font-display text-sm font-bold text-gradient">{a.price}</p>
           </motion.div>
         ))}

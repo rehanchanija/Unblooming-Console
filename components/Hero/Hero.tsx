@@ -90,7 +90,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="mb-5 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 font-mono text-xs text-white/70"
+            className="mb-5 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 font-mono text-xs text-gray-900/70"
           >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
             New Generation · 2026
@@ -128,7 +128,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.6 }}
-            className="mx-auto mt-6 max-w-md text-base text-white/60 lg:mx-0"
+            className="mx-auto mt-6 max-w-md text-base text-gray-900/60 lg:mx-0"
           >
             R36MAX packs 18,000+ classic games across 30+ emulators into a compact form factor featuring a unique 1:1 HD square screen. Built for true retro enthusiasts.
           </motion.p>
@@ -159,8 +159,8 @@ export default function Hero() {
               ["6-8hrs", "Battery"],
             ].map(([num, label]) => (
               <div key={label} className="text-center lg:text-left">
-                <p className="font-display text-2xl font-bold text-white">{num}</p>
-                <p className="text-xs text-white/50">{label}</p>
+                <p className="font-display text-2xl font-bold text-gray-900">{num}</p>
+                <p className="text-xs text-gray-900/50">{label}</p>
               </div>
             ))}
           </motion.div>

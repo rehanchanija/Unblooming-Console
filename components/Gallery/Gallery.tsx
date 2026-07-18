@@ -50,7 +50,7 @@ export default function Gallery() {
                 />
               </motion.div>
               <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
-                <span className="font-mono text-xs text-white">{item.label}</span>
+                <span className="font-mono text-xs text-gray-900">{item.label}</span>
               </div>
             </motion.div>
           </Reveal>
@@ -81,7 +81,7 @@ export default function Gallery() {
                   className="object-contain"
                 />
               </div>
-              <p className="mt-4 text-center font-mono text-xs text-white/60">
+              <p className="mt-4 text-center font-mono text-xs text-gray-900/60">
                 {activeItem.label}
               </p>
             </motion.div>

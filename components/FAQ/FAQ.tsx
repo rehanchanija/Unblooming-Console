@@ -49,7 +49,7 @@ export default function FAQ() {
                 onClick={() => setOpen(open === i ? null : i)}
                 className="flex w-full items-center justify-between px-6 py-5 text-left"
               >
-                <span className="font-body text-sm font-medium text-white sm:text-base">
+                <span className="font-body text-sm font-medium text-gray-900 sm:text-base">
                   {item.q}
                 </span>
                 <motion.span
@@ -69,7 +69,7 @@ export default function FAQ() {
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="px-6 pb-5 text-sm text-white/55">{item.a}</p>
+                    <p className="px-6 pb-5 text-sm text-gray-900/55">{item.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

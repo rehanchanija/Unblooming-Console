@@ -40,8 +40,8 @@ export default function Features() {
             >
               {f.icon}
             </motion.div>
-            <h3 className="font-display text-xl font-semibold text-white">{f.title}</h3>
-            <p className="mt-2 text-sm text-white/55">{f.desc}</p>
+            <h3 className="font-display text-xl font-semibold text-gray-900">{f.title}</h3>
+            <p className="mt-2 text-sm text-gray-900/55">{f.desc}</p>
           </motion.div>
         ))}
       </StaggerGroup>

@@ -13,7 +13,7 @@ export default function AnnouncementBar() {
         {loop.map((item, i) => (
           <span
             key={i}
-            className="mx-6 whitespace-nowrap font-mono text-xs tracking-wide text-white/80"
+            className="mx-6 whitespace-nowrap font-mono text-xs tracking-wide text-gray-900/80"
           >
             {item}
           </span>

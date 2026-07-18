@@ -56,8 +56,8 @@ export default function MagneticButton({
     "relative overflow-hidden inline-flex items-center gap-2 rounded-full px-8 py-4 font-display font-semibold text-sm tracking-wide transition-shadow duration-300";
   const styles =
     variant === "primary"
-      ? "bg-gradient-to-r from-primary to-secondary text-white shadow-glow hover:shadow-[0_0_60px_rgba(255,43,43,0.55)]"
-      : "glass text-white hover:shadow-glow-blue border border-borderc";
+      ? "bg-gradient-to-r from-primary to-secondary text-gray-900 shadow-glow hover:shadow-[0_0_60px_rgba(255,43,43,0.55)]"
+      : "glass text-gray-900 hover:shadow-glow-blue border border-borderc";
 
   return (
     <motion.button

@@ -28,8 +28,8 @@ export default function Performance() {
         {stats.map((s, i) => (
           <Reveal key={s.label} direction="up" delay={i * 0.08}>
             <div className="flex items-center justify-between mb-2">
-              <span className="font-body text-sm text-white/70">{s.label}</span>
-              <span className="font-display text-sm font-semibold text-white">
+              <span className="font-body text-sm text-gray-900/70">{s.label}</span>
+              <span className="font-display text-sm font-semibold text-gray-900">
                 <CountUp to={s.value} suffix={s.suffix} />
               </span>
             </div>

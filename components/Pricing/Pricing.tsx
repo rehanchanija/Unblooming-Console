@@ -71,17 +71,17 @@ export default function Pricing() {
               }
             >
               {plan.highlight && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-1 font-mono text-[10px] uppercase tracking-wide text-white shadow-glow">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-1 font-mono text-[10px] uppercase tracking-wide text-gray-900 shadow-glow">
                   Best Seller
                 </span>
               )}
-              <h3 className="font-display text-xl font-bold text-white">{plan.name}</h3>
+              <h3 className="font-display text-xl font-bold text-gray-900">{plan.name}</h3>
               <p className="mt-4 font-display text-4xl font-bold text-gradient">
                 {plan.price}
               </p>
               <ul className="mt-6 flex-1 space-y-3">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-white/65">
+                  <li key={f} className="flex items-center gap-2 text-sm text-gray-900/65">
                     <span className="text-accent">✓</span>
                     {f}
                   </li>

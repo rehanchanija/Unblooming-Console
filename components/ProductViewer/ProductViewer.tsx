@@ -80,7 +80,7 @@ export default function ProductViewer() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-accent" />
                 </span>
-                <div className="pointer-events-none absolute left-1/2 top-5 w-max -translate-x-1/2 rounded-lg glass px-3 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="pointer-events-none absolute left-1/2 top-5 w-max -translate-x-1/2 rounded-lg glass px-3 py-1 text-xs text-gray-900 opacity-0 transition-opacity group-hover:opacity-100">
                   {h.label}
                 </div>
               </motion.div>
@@ -96,8 +96,8 @@ export default function ProductViewer() {
                 onClick={() => setView(v)}
                 className={`rounded-full px-5 py-2 font-mono text-xs transition-all duration-300 ${
                   view === v
-                    ? "bg-gradient-to-r from-primary to-secondary text-white shadow-glow"
-                    : "glass text-white/60 hover:text-white"
+                    ? "bg-gradient-to-r from-primary to-secondary text-gray-900 shadow-glow"
+                    : "glass text-gray-900/60 hover:text-gray-900"
                 }`}
               >
                 {v} View
@@ -105,7 +105,7 @@ export default function ProductViewer() {
             ))}
           </div>
 
-          <p className="mt-6 max-w-md text-white/60">
+          <p className="mt-6 max-w-md text-gray-900/60">
             Hover the glowing hotspots to explore what makes PULSAR X1 tick —
             from its precision-machined body to the fast-charging port hidden
             along the edge.
@@ -117,7 +117,7 @@ export default function ProductViewer() {
                 key={h.label}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-3 text-sm text-white/70"
+                className="flex items-center gap-3 text-sm text-gray-900/70"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                 {h.label}

@@ -36,7 +36,7 @@ export default function Navbar() {
       )}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6">
-        <a href="#hero" className="font-display text-xl font-bold tracking-tight text-white">
+        <a href="#hero" className="font-display text-xl font-bold tracking-tight text-gray-900">
           R36<span className="text-gradient">MAX</span>
         </a>
 
@@ -45,7 +45,7 @@ export default function Navbar() {
             <li key={link.label}>
               <a
                 href={link.href}
-                className="nav-link font-body text-sm text-white/80 transition-colors hover:text-white"
+                className="nav-link font-body text-sm text-gray-900/80 transition-colors hover:text-gray-900"
               >
                 {link.label}
               </a>
@@ -97,7 +97,7 @@ export default function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="block font-body text-sm text-white/80"
+                    className="block font-body text-sm text-gray-900/80"
                   >
                     {link.label}
                   </a>
