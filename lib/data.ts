@@ -22,21 +22,26 @@ export const MOCK_PRODUCTS = [
   },
   {
     id: 'prod_2',
-    name: 'R36MAX Console (Grey)',
+    name: 'R36MAX Retro Console (Red)',
     price: 4499,
-    image: '/r36max_front_1784376825798.png',
+    image: '/hero-r36max.png',
     gallery: [
+      '/hero-r36max.png',
       '/r36max_front_1784376825798.png',
       '/r36max_back_1784376843013.png',
       '/r36max_side_1784376854209.png'
     ],
-    description: 'The ultimate retro handheld gaming console. Relive your childhood memories with 18,000+ pre-loaded games, a crisp 3.5" IPS display, and ergonomic grips.',
+    description: 'The R36MAX is a budget-friendly, open-source handheld retro game console. It runs on a Linux-based system and is capable of emulating dozens of classic gaming systems (including GBA, PS1, and N64) on a vibrant 4-inch display.',
     specs: {
-      'Processor': 'RK3326 Quad-Core 1.5GHz',
-      'RAM': '1GB DDR3L',
-      'Screen': '3.5" IPS OCA Full Fit (640x480)',
-      'Battery': '3500mAh Li-polymer (6-8 hours)',
-      'Storage': '64GB MicroSD (Expandable to 256GB)',
+      'Display': '4.0-inch IPS fully-laminated screen (720 × 720)',
+      'Processor (CPU)': 'Rockchip RK3326 64-bit quad-core @ 1.5 GHz',
+      'Graphics (GPU)': 'Mali-G31 MP2',
+      'RAM': '1GB DDR3',
+      'Battery': '4000 mAh rechargeable (6 to 8 hours)',
+      'Storage': '64GB MicroSD (18,000+ pre-loaded games)',
+      'Emulators': '30+ emulators (PSP, N64, PS1, DS, GBA, Arcade)',
+      'Controls': 'Dual 3D analog joysticks, D-pad, L1/L2/R1/R2',
+      'Connectivity': 'USB Type-C, 3.5mm headphone jack'
     },
     rating: 4.8,
     reviews: [

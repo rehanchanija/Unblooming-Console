@@ -27,16 +27,16 @@ export default function SinglePageStore() {
               New Arrival
             </div>
             <h1 className="text-5xl md:text-6xl font-black text-gray-900 leading-tight tracking-tight">
-              Never drink cold coffee again.
+              Relive your best childhood memories.
             </h1>
             <p className="text-xl text-gray-500 font-medium max-w-md leading-relaxed">
-              Meet the LuminaMug. A beautifully designed smart mug that keeps your coffee exactly at your preferred temperature for up to 3 hours.
+              Meet the R36MAX. The ultimate retro handheld gaming console with a stunning IPS display and 18,000+ pre-loaded games ready to play.
             </p>
             <div className="pt-4 flex items-center space-x-6">
               <button 
                 onClick={scrollToBuy}
                 className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1">
-                Order Now - ₹2,999
+                Order Now - ₹4,499
               </button>
               <div className="flex -space-x-2">
                 <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">⭐</div>
@@ -48,12 +48,20 @@ export default function SinglePageStore() {
           
           <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto">
             <Image 
-              src="/smart-mug.png" 
-              alt="LuminaMug Smart Coffee Mug" 
+              src="/hero-r36max.png" 
+              alt="R36MAX Retro Console" 
               fill
-              className="object-cover rounded-[40px] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
+              className="object-contain"
+              style={{ animation: 'float 6s ease-in-out infinite' }}
               priority
             />
+            <style>{`
+              @keyframes float {
+                0% { transform: translateY(0px) rotate(2deg); filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15)); }
+                50% { transform: translateY(-20px) rotate(-2deg); filter: drop-shadow(0 35px 35px rgb(0 0 0 / 0.25)); }
+                100% { transform: translateY(0px) rotate(2deg); filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15)); }
+              }
+            `}</style>
           </div>
         </div>
       </section>
@@ -64,52 +72,52 @@ export default function SinglePageStore() {
       {/* 3. ABOUT SECTION */}
       <section className="py-24 bg-white" id="about">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">Perfect temperature. Every single sip.</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">Classic gaming, modernized.</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="space-y-4">
-              <div className="w-16 h-16 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🌡️</div>
-              <h3 className="text-xl font-bold text-gray-900">Precision Heat</h3>
-              <p className="text-gray-500 font-medium">Set your exact preferred drinking temperature down to the degree using the touch base.</p>
+              <div className="w-16 h-16 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🎮</div>
+              <h3 className="text-xl font-bold text-gray-900">Endless Library</h3>
+              <p className="text-gray-500 font-medium">Pre-loaded with over 18,000 games across 30+ classic emulators (PS1, N64, GBA, and more).</p>
             </div>
             <div className="space-y-4">
-              <div className="w-16 h-16 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🔋</div>
-              <h3 className="text-xl font-bold text-gray-900">All-Day Battery</h3>
-              <p className="text-gray-500 font-medium">Keeps your drink hot for up to 3 hours off the coaster, or all day when resting on it.</p>
+              <div className="w-16 h-16 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🖥️</div>
+              <h3 className="text-xl font-bold text-gray-900">Vibrant Display</h3>
+              <p className="text-gray-500 font-medium">A fully-laminated 4.0-inch IPS screen delivers crisp, punchy colors at 720 × 720 resolution.</p>
             </div>
             <div className="space-y-4">
-              <div className="w-16 h-16 bg-green-100 text-green-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">💧</div>
-              <h3 className="text-xl font-bold text-gray-900">Safe to Wash</h3>
-              <p className="text-gray-500 font-medium">Fully IPX7 waterproof. Safe to hand wash right alongside your regular dishes.</p>
+              <div className="w-16 h-16 bg-green-100 text-green-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">🕹️</div>
+              <h3 className="text-xl font-bold text-gray-900">Pro Controls</h3>
+              <p className="text-gray-500 font-medium">Features dual 3D analog joysticks, an accurate D-pad, and L1/L2/R1/R2 shoulder triggers.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. DETAILS SECTION */}
+      {/* 4. DETAILS SECTION */}
       <section className="py-24 bg-gray-50" id="details">
         <div className="max-w-4xl mx-auto px-6 bg-white rounded-[40px] p-8 md:p-16 border border-gray-100 shadow-xl">
-          <h2 className="text-3xl font-black text-gray-900 mb-8 border-b border-gray-100 pb-4">Technical Specifications</h2>
+          <h2 className="text-3xl font-black text-gray-900 mb-8 border-b border-gray-100 pb-4">Hardware Specifications</h2>
           <ul className="space-y-6">
             <li className="flex flex-col sm:flex-row sm:justify-between">
-              <span className="text-gray-500 font-medium">Capacity</span>
-              <strong className="text-gray-900 text-lg">14 oz (414 ml)</strong>
+              <span className="text-gray-500 font-medium">Display</span>
+              <strong className="text-gray-900 text-lg">4.0-inch IPS fully-laminated (720×720)</strong>
             </li>
             <li className="flex flex-col sm:flex-row sm:justify-between">
-              <span className="text-gray-500 font-medium">Temperature Range</span>
-              <strong className="text-gray-900 text-lg">120°F - 145°F (50°C - 62.5°C)</strong>
+              <span className="text-gray-500 font-medium">Processor (CPU)</span>
+              <strong className="text-gray-900 text-lg">Rockchip RK3326 64-bit quad-core @ 1.5 GHz</strong>
             </li>
             <li className="flex flex-col sm:flex-row sm:justify-between">
-              <span className="text-gray-500 font-medium">Battery Life</span>
-              <strong className="text-gray-900 text-lg">3 Hours (Built-in Lithium-ion)</strong>
+              <span className="text-gray-500 font-medium">Battery</span>
+              <strong className="text-gray-900 text-lg">4000 mAh (6 to 8 hours playtime)</strong>
             </li>
             <li className="flex flex-col sm:flex-row sm:justify-between">
-              <span className="text-gray-500 font-medium">Material</span>
-              <strong className="text-gray-900 text-lg">Ceramic coated stainless steel</strong>
+              <span className="text-gray-500 font-medium">Storage Options</span>
+              <strong className="text-gray-900 text-lg">Dual MicroSD slots (up to 512GB)</strong>
             </li>
             <li className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-500 font-medium">Connectivity</span>
-              <strong className="text-gray-900 text-lg">Bluetooth 5.0 (App Compatible)</strong>
+              <strong className="text-gray-900 text-lg">USB Type-C, 3.5mm headphone jack</strong>
             </li>
           </ul>
         </div>
