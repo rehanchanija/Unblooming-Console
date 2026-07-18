@@ -123,6 +123,34 @@ export default function SinglePageStore() {
         </div>
       </section>
 
+      {/* 5. OUR PROMISES SECTION */}
+      <section className="py-24 bg-gray-900 text-white" id="policy">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+            <div className="space-y-4 p-8 rounded-[32px] bg-gray-800/50 hover:bg-gray-800 transition-all border border-gray-700/50 hover:border-orange-500/30 group">
+              <div className="w-16 h-16 bg-gray-900 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition-transform shadow-inner">🛡️</div>
+              <h4 className="font-black text-lg">1-Year Warranty</h4>
+              <p className="text-sm text-gray-400 font-medium">Full hardware protection on all consoles.</p>
+            </div>
+            <div className="space-y-4 p-8 rounded-[32px] bg-gray-800/50 hover:bg-gray-800 transition-all border border-gray-700/50 hover:border-orange-500/30 group">
+              <div className="w-16 h-16 bg-gray-900 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition-transform shadow-inner">📦</div>
+              <h4 className="font-black text-lg">Easy Returns</h4>
+              <p className="text-sm text-gray-400 font-medium">7-day hassle-free return policy.</p>
+            </div>
+            <div className="space-y-4 p-8 rounded-[32px] bg-gray-800/50 hover:bg-gray-800 transition-all border border-gray-700/50 hover:border-orange-500/30 group">
+              <div className="w-16 h-16 bg-gray-900 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition-transform shadow-inner">❌</div>
+              <h4 className="font-black text-lg">Anytime Cancel</h4>
+              <p className="text-sm text-gray-400 font-medium">Cancel your order before it ships, no questions asked.</p>
+            </div>
+            <div className="space-y-4 p-8 rounded-[32px] bg-gray-800/50 hover:bg-gray-800 transition-all border border-gray-700/50 hover:border-orange-500/30 group">
+              <div className="w-16 h-16 bg-gray-900 text-orange-500 rounded-2xl flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition-transform shadow-inner">🎧</div>
+              <h4 className="font-black text-lg">24/7 Support</h4>
+              <p className="text-sm text-gray-400 font-medium">Always here to help you game on.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FOOTER */}
       <footer className="bg-gray-50 border-t border-gray-200 pt-16 pb-8" id="contact">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 text-center md:text-left">
@@ -148,11 +176,23 @@ export default function SinglePageStore() {
 
           {/* Contact */}
           <div>
-            <h5 className="font-bold text-gray-900 mb-4">Contact Us</h5>
-            <div className="flex flex-col space-y-2 text-sm font-medium text-gray-500">
-              <span>📧 support@unblooming.com</span>
-              <span>📞 +91 98765 43210</span>
-              <span>📍 123 Innovation Drive, Tech Park</span>
+            <div className="flex items-center space-x-2 mb-4">
+              <h5 className="font-bold text-gray-900">Contact Us</h5>
+              <span className="bg-orange-100 text-orange-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">24/7 Support</span>
+            </div>
+            <div className="flex flex-col space-y-3 text-sm font-medium text-gray-600">
+              <a href="mailto:support@unblooming.com" className="flex items-center space-x-3 hover:text-orange-500 transition-colors bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <span className="text-lg">📧</span>
+                <span>support@unblooming.com</span>
+              </a>
+              <a href="tel:+919876543210" className="flex items-center space-x-3 hover:text-orange-500 transition-colors bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <span className="text-lg">📞</span>
+                <span>+91 98765 43210</span>
+              </a>
+              <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <span className="text-lg">📍</span>
+                <span>123 Innovation Drive, Tech Park</span>
+              </div>
             </div>
           </div>
         </div>

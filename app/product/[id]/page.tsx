@@ -92,9 +92,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <span>🛒</span>
                 </button>
               </div>
-              <div className="mt-4 hidden md:flex justify-center space-x-6 text-sm font-bold text-gray-400">
-                <span className="flex items-center">🚚 Free Shipping</span>
-                <span className="flex items-center">🛡️ 7-Day Returns</span>
+              <div className="mt-8 grid grid-cols-4 gap-2 border-t border-gray-100 pt-6">
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 text-xl">🔄</div>
+                  <span className="text-[11px] font-bold text-teal-700 leading-tight">7 Days<br/>Replacement</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 text-xl">🚚</div>
+                  <span className="text-[11px] font-bold text-teal-700 leading-tight">Free<br/>Delivery</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 text-xl">🛡️</div>
+                  <span className="text-[11px] font-bold text-teal-700 leading-tight">1 Year<br/>Warranty</span>
+                </div>
+                <div className="flex flex-col items-center text-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 text-xl">❌</div>
+                  <span className="text-[11px] font-bold text-teal-700 leading-tight">Anytime<br/>Cancel</span>
+                </div>
               </div>
             </div>
           </div>

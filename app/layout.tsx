@@ -25,20 +25,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PULSAR X1 — The Ultimate Retro Handheld Gaming Console",
+  title: "UNBLOOMING",
   description:
-    "PULSAR X1 is a premium retro handheld gaming console with 10,000+ games, 64GB storage, blazing-fast emulation, and a stunning IPS display. Relive retro gaming, reimagined.",
+    "UNBLOOMING is a premium retro handheld gaming console with 10,000+ games, 64GB storage, blazing-fast emulation, and a stunning IPS display. Relive retro gaming, reimagined.",
   keywords: [
     "retro handheld console",
     "retro gaming device",
-    "PULSAR X1",
+    "UNBLOOMING",
     "emulator handheld",
     "buy retro console",
   ],
   openGraph: {
-    title: "PULSAR X1 — The Ultimate Retro Handheld Gaming Console",
+    title: "UNBLOOMING",
     description:
-      "10,000+ games. 64GB storage. Premium glass body. The retro handheld reimagined for 2026.",
+      "UNBLOOMING is a premium retro handheld gaming console with 10,000+ games, 64GB storage, blazing-fast emulation, and a stunning IPS display. Relive retro gaming, reimagined.",
     type: "website",
   },
 };
@@ -49,7 +49,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="bg-bg font-body antialiased">
         <SmoothScrollProvider>
           <AuthProvider>
