@@ -93,6 +93,18 @@ export default function AdminProducts() {
     }
   };
 
+  const handleEditCategory = async (cat: any) => {
+    const newName = prompt('Enter new category name:', cat.name);
+    if (newName && newName.trim() !== cat.name) {
+      try {
+        await adminApi.patch(`/categories/${cat._id}`, { name: newName.trim() });
+        fetchMasterData();
+      } catch (error) {
+        console.error('Failed to edit category', error);
+      }
+    }
+  };
+
   const handleDeleteCategory = async (id: string) => {
     try {
       await adminApi.delete(`/categories/${id}`);
@@ -110,6 +122,18 @@ export default function AdminProducts() {
       fetchMasterData();
     } catch (error) {
       console.error('Failed to add color', error);
+    }
+  };
+
+  const handleEditColor = async (col: any) => {
+    const newName = prompt('Enter new color name:', col.name);
+    if (newName && newName.trim() !== col.name) {
+      try {
+        await adminApi.patch(`/colors/${col._id}`, { name: newName.trim() });
+        fetchMasterData();
+      } catch (error) {
+        console.error('Failed to edit color', error);
+      }
     }
   };
 
@@ -410,14 +434,17 @@ export default function AdminProducts() {
               <div>
                 <h3 className="font-bold text-gray-800 mb-3 text-lg">Categories</h3>
                 <form onSubmit={handleAddCategory} className="flex gap-2 mb-4">
-                  <input required type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New category name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
+                  <input required type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New category name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
                   <button type="submit" className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl transition-colors text-sm">Add</button>
                 </form>
                 <div className="flex flex-wrap gap-2">
                   {categoriesList.map(cat => (
-                    <div key={cat._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-2 text-sm text-gray-700">
+                    <div key={cat._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-1 text-sm text-gray-900 font-medium">
                       <span>{cat.name}</span>
-                      <button onClick={() => handleDeleteCategory(cat._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">✕</button>
+                      <button type="button" onClick={() => handleEditCategory(cat)} className="bg-white text-gray-400 hover:text-blue-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm" title="Edit">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                      </button>
+                      <button type="button" onClick={() => handleDeleteCategory(cat._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm" title="Delete">✕</button>
                     </div>
                   ))}
                   {categoriesList.length === 0 && <span className="text-gray-400 text-sm">No categories added yet.</span>}
@@ -428,14 +455,17 @@ export default function AdminProducts() {
               <div>
                 <h3 className="font-bold text-gray-800 mb-3 text-lg">Colors</h3>
                 <form onSubmit={handleAddColor} className="flex gap-2 mb-4">
-                  <input required type="text" value={newColor} onChange={e => setNewColor(e.target.value)} placeholder="New color name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
+                  <input required type="text" value={newColor} onChange={e => setNewColor(e.target.value)} placeholder="New color name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
                   <button type="submit" className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl transition-colors text-sm">Add</button>
                 </form>
                 <div className="flex flex-wrap gap-2">
                   {colorsList.map(col => (
-                    <div key={col._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-2 text-sm text-gray-700">
+                    <div key={col._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-1 text-sm text-gray-900 font-medium">
                       <span>{col.name}</span>
-                      <button onClick={() => handleDeleteColor(col._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">✕</button>
+                      <button type="button" onClick={() => handleEditColor(col)} className="bg-white text-gray-400 hover:text-blue-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm" title="Edit">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                      </button>
+                      <button type="button" onClick={() => handleDeleteColor(col._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm" title="Delete">✕</button>
                     </div>
                   ))}
                   {colorsList.length === 0 && <span className="text-gray-400 text-sm">No colors added yet.</span>}
