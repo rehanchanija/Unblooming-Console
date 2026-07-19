@@ -29,7 +29,7 @@ export default function SinglePageStore() {
       <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-50 rounded-bl-[100px] -z-10"></div>
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
+          <div className="space-y-6 order-2 md:order-1">
             <div className="inline-block px-3 py-1 bg-orange-100 text-orange-600 font-bold rounded-full text-sm mb-2">
               New Arrival
             </div>
@@ -61,7 +61,7 @@ export default function SinglePageStore() {
             </div>
           </div>
 
-          <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto">
+          <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto order-1 md:order-2 mb-8 md:mb-0">
             <Image
               src="/hero-r36max.png"
               alt="R36MAX Retro Console"
