@@ -50,7 +50,14 @@ export default function ProductList() {
     e.preventDefault(); 
     e.stopPropagation();
     
-    addToCart(product);
+    addToCart({
+      productId: product.id,
+      title: product.name,
+      price: product.price.toString(),
+      quantity: 1,
+      imageUrl: product.image,
+      color: product.variants?.[0]?.color || ""
+    });
     router.push('/cart');
   };
 

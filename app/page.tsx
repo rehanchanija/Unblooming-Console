@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ProductList from "@/components/ProductList";
+import { useCart } from "@/lib/CartContext";
 
 export default function SinglePageStore() {
   const [isOrdered, setIsOrdered] = useState(false);
@@ -14,6 +15,7 @@ export default function SinglePageStore() {
 
   const [heroProduct, setHeroProduct] = useState<any>(null);
   const router = useRouter();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchHeroProduct = async () => {
@@ -71,13 +73,19 @@ export default function SinglePageStore() {
               {heroProduct && (
                 <button
                   onClick={() => {
-                    router.push(
-                      `/product/${heroProduct._id || heroProduct.id}`,
-                    );
+                    addToCart({
+                      productId: heroProduct._id || heroProduct.id,
+                      title: heroProduct.title || heroProduct.name,
+                      price: heroProduct.price.toString(),
+                      quantity: 1,
+                      imageUrl: heroProduct.variants?.[0]?.imageUrl || heroProduct.imageUrl || "",
+                      color: heroProduct.variants?.[0]?.color || ""
+                    });
+                    router.push('/cart');
                   }}
                   className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1"
                 >
-                  Order Now - ₹{heroProduct.price}
+                  Add to Cart - ₹{heroProduct.price}
                 </button>
               )}
             </div>

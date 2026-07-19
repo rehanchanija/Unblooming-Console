@@ -1,11 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '@/lib/CartContext';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function CheckoutPage() {
-  const { cartTotal, clearCart } = useCart();
+  const { cart, cartTotal, clearCart } = useCart();
   const router = useRouter();
+  
+  const { user, updateUser } = useAuth();
   
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -17,14 +20,52 @@ export default function CheckoutPage() {
     paymentMethod: 'COD'
   });
 
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        address: user.address || prev.address,
+      }));
+    }
+  }, [user]);
+
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
+    if (user && formData.address) {
+      // Keep user profile address updated
+      updateUser({ address: `${formData.address}, ${formData.city} - ${formData.pincode}` });
+    }
     setStep(2);
   };
 
-  const handlePlaceOrder = () => {
-    setStep(3);
-    clearCart();
+  const handlePlaceOrder = async () => {
+    try {
+      const productName = cart.map(item => `${item.quantity}x ${item.title}`).join(', ');
+      
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: formData.name,
+          total: cartTotal.toString(),
+          productName,
+          address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+          items: cart
+        })
+      });
+      
+      if (res.ok) {
+        setStep(3);
+        clearCart();
+      } else {
+        alert("Failed to place order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      alert("Failed to place order. Please try again.");
+    }
   };
 
   if (step === 3) {

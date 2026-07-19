@@ -86,10 +86,37 @@ export default function AdminOrders() {
                 {order.status}
               </span>
             </div>
-            <div className="flex flex-col space-y-1 text-sm text-gray-500">
-              <p><span className="font-semibold text-gray-700">Product:</span> {order.productName}</p>
-              <p><span className="font-semibold text-gray-700">Date:</span> {new Date(order.date || order.createdAt).toLocaleDateString()}</p>
-              <p><span className="font-semibold text-gray-700">Total:</span> <span className="text-gray-900 font-bold">{order.total}</span></p>
+            <div className="flex flex-col space-y-2 text-sm text-gray-500">
+              {order.items && order.items.length > 0 ? (
+                <div className="space-y-1">
+                  <span className="font-semibold text-gray-700 block">Products:</span>
+                  {order.items.map((item: any, idx: number) => (
+                    <div key={idx} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        {item.imageUrl && <img src={item.imageUrl} alt={item.title} className="w-8 h-8 object-contain rounded" />}
+                        <div>
+                          <p className="text-gray-900 font-medium">{item.title} {item.color && `(${item.color})`}</p>
+                          <p className="text-xs">Qty: {item.quantity}</p>
+                        </div>
+                      </div>
+                      <span className="font-bold text-gray-900">₹{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p><span className="font-semibold text-gray-700">Product:</span> {order.productName}</p>
+              )}
+              {order.address && (
+                <p><span className="font-semibold text-gray-700 block">Shipping Address:</span> <span className="text-gray-600">{order.address}</span></p>
+              )}
+              <div className="flex justify-between border-t border-gray-100 pt-2 mt-2">
+                <span className="font-semibold text-gray-700">Date:</span> 
+                <span>{new Date(order.date || order.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-gray-700">Total:</span> 
+                <span className="text-gray-900 font-bold">{order.total}</span>
+              </div>
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end">
               <button onClick={() => handleStatusUpdate(order._id || order.id, order.status)} className="text-blue-500 hover:text-blue-700 font-bold text-sm">Update Status</button>
