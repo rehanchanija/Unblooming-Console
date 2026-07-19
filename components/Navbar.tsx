@@ -1,11 +1,11 @@
-'use client';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useCart } from '@/lib/CartContext';
-import { useAuth } from '@/lib/AuthContext';
+"use client";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useCart } from "@/lib/CartContext";
+import { useAuth } from "@/lib/AuthContext";
 
-import { Menu, X, ShoppingBag, User } from 'lucide-react';
+import { Menu, X, ShoppingBag, User } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -19,22 +19,25 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (pathname?.startsWith('/admin')) {
+  if (pathname?.startsWith("/admin")) {
     return null;
   }
 
-  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleScrollTo = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    
-    if (pathname === '/') {
+
+    if (pathname === "/") {
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     } else {
       router.push(`/#${id}`);
@@ -42,48 +45,61 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 py-3' : 'bg-transparent py-5'}`}>
-      <div className="max-w-5xl mx-auto px-6 flex justify-between items-center relative">
-        
-        {/* Mobile Left: Hamburger */}
-        <div className="flex md:hidden w-1/3 justify-start">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen ? "bg-white/95 backdrop-blur-md border-b border-gray-200 py-3" : "bg-transparent py-5"}`}
+    >
+      <div className="max-w-5xl mx-auto px-2 md:px-6 flex justify-between items-center relative h-16">
+        {/* Left: Hamburger + Logo */}
+        <div className="flex items-center flex-1 space-x-2 md:space-x-0">
           <button 
-            className="text-gray-900 p-1"
+            className="md:hidden text-gray-900 p-1 -ml-1 flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} strokeWidth={2.5} />}
           </button>
-        </div>
-
-        {/* Desktop Left: Logo */}
-        <div className="hidden md:flex items-center w-1/4">
-          <Link href="/" className="text-2xl font-black text-gray-900 tracking-tight" onClick={() => setIsMobileMenuOpen(false)}>
-            UN<span className="text-orange-500">BLOOMING</span>
-          </Link>
-        </div>
-
-        {/* Mobile Center: Logo */}
-        <div className="flex md:hidden w-1/3 justify-center">
-          <Link href="/" className="text-xl font-black text-gray-900 tracking-tight" onClick={() => setIsMobileMenuOpen(false)}>
+          
+          <Link href="/" className="text-xl md:text-2xl font-black text-gray-900 tracking-tight whitespace-nowrap" onClick={() => setIsMobileMenuOpen(false)}>
             UN<span className="text-orange-500">BLOOMING</span>
           </Link>
         </div>
 
         {/* Desktop Center: Links */}
         <div className="hidden md:flex items-center justify-center space-x-8 text-sm font-bold text-gray-700 flex-1">
-          <a href="#home" onClick={(e) => handleScrollTo(e, 'home')} className="hover:text-orange-500 transition-colors">Home</a>
-          <a href="#about" onClick={(e) => handleScrollTo(e, 'about')} className="hover:text-orange-500 transition-colors">About Us</a>
-          <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 transition-colors">Details</a>
+          <a
+            href="#home"
+            onClick={(e) => handleScrollTo(e, "home")}
+            className="hover:text-orange-500 transition-colors"
+          >
+            Home
+          </a>
+          <a
+            href="#about"
+            onClick={(e) => handleScrollTo(e, "about")}
+            className="hover:text-orange-500 transition-colors"
+          >
+            About Us
+          </a>
+          <a
+            href="#details"
+            onClick={(e) => handleScrollTo(e, "details")}
+            className="hover:text-orange-500 transition-colors"
+          >
+            Details
+          </a>
           {user && (
-            <Link href="/orders" className="hover:text-orange-500 transition-colors">Orders</Link>
+            <Link
+              href="/orders"
+              className="hover:text-orange-500 transition-colors"
+            >
+              Orders
+            </Link>
           )}
         </div>
 
         {/* Right: Cart and Profile */}
-        <div className="flex w-1/3 md:w-1/4 justify-end items-center space-x-2 md:space-x-4">
-          
+        <div className="flex flex-1 justify-end items-center space-x-2 md:space-x-4">
           {/* Cart Icon */}
-          <Link 
+          <Link
             href="/cart"
             className="relative flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors"
           >
@@ -98,31 +114,59 @@ export default function Navbar() {
           {/* Profile Icon / User Name */}
           <div className="flex items-center">
             {user ? (
-              <Link href="/profile" className="font-black text-gray-900 hover:text-orange-500 transition-colors text-sm truncate max-w-[100px] md:max-w-[150px]">
+              <Link
+                href="/profile"
+                className="font-black text-gray-900 hover:text-orange-500 transition-colors text-sm truncate max-w-[100px] md:max-w-[150px]"
+              >
                 {user.name}
               </Link>
             ) : (
-              <Link href="/login" className="flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors">
+              <Link
+                href="/login"
+                className="flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors"
+              >
                 <User size={26} strokeWidth={2.2} />
               </Link>
             )}
           </div>
-
         </div>
       </div>
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl py-4 px-6 flex flex-col space-y-4 text-gray-900 font-bold animate-in slide-in-from-top-4">
-          <a href="#home" onClick={(e) => handleScrollTo(e, 'home')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Home</a>
-          <a href="#about" onClick={(e) => handleScrollTo(e, 'about')} className="hover:text-orange-500 block py-2 border-b border-gray-50">About Us</a>
-          <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Details</a>
+          <a
+            href="#home"
+            onClick={(e) => handleScrollTo(e, "home")}
+            className="hover:text-orange-500 block py-2 border-b border-gray-50"
+          >
+            Home
+          </a>
+          <a
+            href="#about"
+            onClick={(e) => handleScrollTo(e, "about")}
+            className="hover:text-orange-500 block py-2 border-b border-gray-50"
+          >
+            About Us
+          </a>
+          <a
+            href="#details"
+            onClick={(e) => handleScrollTo(e, "details")}
+            className="hover:text-orange-500 block py-2 border-b border-gray-50"
+          >
+            Details
+          </a>
           {user && (
-            <Link href="/orders" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-orange-500 block py-2 border-b border-gray-50">Orders</Link>
+            <Link
+              href="/orders"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-orange-500 block py-2 border-b border-gray-50"
+            >
+              Orders
+            </Link>
           )}
         </div>
       )}
     </nav>
   );
 }
-
