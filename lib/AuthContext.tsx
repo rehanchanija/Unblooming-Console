@@ -6,6 +6,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  address?: string;
 };
 
 export type Order = {
@@ -21,6 +22,7 @@ interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
+  updateUser: (data: Partial<User>) => void;
   orders: Order[];
   addOrder: (order: Order) => void;
 }
@@ -48,6 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('mockUser');
   };
 
+  const updateUser = (data: Partial<User>) => {
+    if (!user) return;
+    const updated = { ...user, ...data };
+    setUser(updated);
+    localStorage.setItem('mockUser', JSON.stringify(updated));
+  };
+
   const addOrder = (order: Order) => {
     const newOrders = [order, ...orders];
     setOrders(newOrders);
@@ -55,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, orders, addOrder }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, orders, addOrder }}>
       {children}
     </AuthContext.Provider>
   );
