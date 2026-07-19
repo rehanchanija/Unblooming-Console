@@ -44,7 +44,7 @@ export default function CheckoutPage() {
     try {
       const productName = cart.map(item => `${item.quantity}x ${item.title}`).join(', ');
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://unblooming-backend-two.vercel.app'}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -165,3 +165,4 @@ export default function CheckoutPage() {
     </main>
   );
 }
+

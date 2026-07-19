@@ -21,17 +21,12 @@ export default function SinglePageStore() {
     const fetchHeroProduct = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`,
+          `${process.env.NEXT_PUBLIC_API_URL}/content/hero`,
         );
         if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            data.sort(
-              (a: any, b: any) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime(),
-            );
-            setHeroProduct(data[0]);
+          const resData = await res.json();
+          if (resData && resData.data) {
+            setHeroProduct(resData.data);
           }
         }
       } catch (error) {
@@ -67,25 +62,15 @@ export default function SinglePageStore() {
               {heroProduct?.title}
             </h1>
             <p className="text-xl text-gray-500 font-medium max-w-md leading-relaxed line-clamp-3">
-              {heroProduct?.details}
+              {heroProduct?.subtitle}
             </p>
             <div className="pt-4 flex items-center space-x-6">
               {heroProduct && (
                 <button
-                  onClick={() => {
-                    addToCart({
-                      productId: heroProduct._id || heroProduct.id,
-                      title: heroProduct.title || heroProduct.name,
-                      price: heroProduct.price.toString(),
-                      quantity: 1,
-                      imageUrl: heroProduct.variants?.[0]?.imageUrl || heroProduct.imageUrl || "",
-                      color: heroProduct.variants?.[0]?.color || ""
-                    });
-                    router.push('/cart');
-                  }}
+                  onClick={scrollToBuy}
                   className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1"
                 >
-                  Add to Cart - ₹{heroProduct.price}
+                  {heroProduct.buttonText} - {heroProduct.buttonPrice}
                 </button>
               )}
             </div>
@@ -94,12 +79,8 @@ export default function SinglePageStore() {
           <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto order-1 md:order-2 mb-8 md:mb-0">
             {heroProduct && (
               <Image
-                src={
-                  heroProduct.imageUrl ||
-                  heroProduct.variants?.[0]?.imageUrl ||
-                  ""
-                }
-                alt={heroProduct.title || "Product Image"}
+                src={heroProduct.imageUrl || ""}
+                alt={heroProduct.title || "Hero Image"}
                 fill
                 className="object-contain"
                 style={{ animation: "float 6s ease-in-out infinite" }}
@@ -351,3 +332,4 @@ export default function SinglePageStore() {
     </main>
   );
 }
+

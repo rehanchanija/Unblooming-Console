@@ -27,6 +27,19 @@ export const adminApi = {
     }
     return response.json();
   },
+  async put(endpoint: string, data: any) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`PUT ${endpoint} failed`);
+    }
+    return response.json();
+  },
 
   async patch(endpoint: string, data: any) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -52,3 +65,4 @@ export const adminApi = {
     return response.json();
   },
 };
+

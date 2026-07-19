@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/admin-login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://unblooming-backend-two.vercel.app'}/auth/admin-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -101,3 +101,4 @@ export default function AdminLoginPage() {
     </main>
   );
 }
+

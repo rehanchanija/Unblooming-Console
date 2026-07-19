@@ -40,7 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     fetchCart(storedUserId);
   }, []);
 
-  const getApiUrl = () => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const getApiUrl = () => process.env.NEXT_PUBLIC_API_URL || 'https://unblooming-backend-two.vercel.app';
 
   const fetchCart = async (uid: string) => {
     try {
@@ -172,3 +172,4 @@ export function useCart() {
   }
   return context;
 }
+

@@ -22,7 +22,7 @@ export default function ProductDetailPage({
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products/${unwrappedParams.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL || "https://unblooming-backend-two.vercel.app"}/products/${unwrappedParams.id}`,
         );
         if (res.ok) {
           const p = await res.json();

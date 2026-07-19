@@ -16,7 +16,7 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/orders`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://unblooming-backend-two.vercel.app'}/orders`);
         const data = await res.json();
         
         // Filter by user if logged in
@@ -103,3 +103,4 @@ export default function OrdersPage() {
     </div>
   );
 }
+

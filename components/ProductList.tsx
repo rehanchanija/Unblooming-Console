@@ -16,7 +16,7 @@ export default function ProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://unblooming-backend-two.vercel.app"}/products`);
         if (res.ok) {
           const data = await res.json();
           const mappedProducts = data.map((p: any) => ({
@@ -131,3 +131,4 @@ export default function ProductList() {
     </section>
   );
 }
+

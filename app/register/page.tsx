@@ -17,7 +17,7 @@ export default function RegisterPage() {
     setError('');
     setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://unblooming-backend-two.vercel.app'}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, password }),
@@ -126,3 +126,4 @@ export default function RegisterPage() {
     </main>
   );
 }
+

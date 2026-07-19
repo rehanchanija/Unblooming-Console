@@ -240,7 +240,7 @@ export default function AdminProducts() {
         formData.append("file", imageFile);
 
         const uploadRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/upload/image`,
+          `${process.env.NEXT_PUBLIC_API_URL || "https://unblooming-backend-two.vercel.app"}/upload/image`,
           {
             method: "POST",
             body: formData,
@@ -270,7 +270,7 @@ export default function AdminProducts() {
           const formData = new FormData();
           formData.append("file", variantFiles[i]);
           const uploadRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/upload/image`,
+            `${process.env.NEXT_PUBLIC_API_URL || "https://unblooming-backend-two.vercel.app"}/upload/image`,
             {
               method: "POST",
               body: formData,
@@ -951,3 +951,4 @@ export default function AdminProducts() {
     </div>
   );
 }
+

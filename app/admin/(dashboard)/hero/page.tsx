@@ -51,7 +51,7 @@ export default function AdminHero() {
         const formData = new FormData();
         formData.append('file', imageFile);
 
-        const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/upload/image`, {
+        const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/image`, {
           method: 'POST',
           body: formData,
         });
@@ -61,7 +61,7 @@ export default function AdminHero() {
         setImageUrl(finalImageUrl);
       }
 
-      await adminApi.post('/content/hero', { ...formData, imageUrl: finalImageUrl });
+      await adminApi.put('/content/hero', { ...formData, imageUrl: finalImageUrl });
       alert('Hero settings saved successfully!');
     } catch (error) {
       console.error('Failed to save hero settings', error);
@@ -153,3 +153,4 @@ export default function AdminHero() {
     </div>
   );
 }
+
