@@ -1,17 +1,52 @@
 'use client';
-import { MOCK_PRODUCTS } from '@/lib/data';
 import { useCart } from '@/lib/CartContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const unwrappedParams = use(params);
-  const product = MOCK_PRODUCTS.find(p => p.id === unwrappedParams.id);
+  
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const router = useRouter();
   const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products/${unwrappedParams.id}`);
+        if (res.ok) {
+          const p = await res.json();
+          setProduct({
+            id: p._id || p.id,
+            name: p.title || p.name,
+            price: p.price,
+            category: p.category,
+            color: p.color,
+            image: p.imageUrl || '',
+            description: p.details || '',
+            specs: p.technicalSpecifications || {}
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch product", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [unwrappedParams.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 text-center bg-gray-50 flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold text-gray-400">Loading Product...</h1>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -47,39 +82,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left: Gallery */}
-          <div className="space-y-4">
-            <div className="relative aspect-square bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm">
+            {/* Main Image */}
+            <div className="relative aspect-square bg-[#0a0a0a] rounded-[32px] overflow-hidden border border-gray-100 shadow-sm flex items-center justify-center p-8 group">
               <Image 
-                src={product.gallery[activeImage]} 
+                src={product.image} 
                 alt={product.name} 
                 fill 
-                className="object-contain p-8"
+                className="object-contain p-8 group-hover:scale-105 transition-transform duration-700" 
               />
             </div>
-            {product.gallery.length > 1 && (
-              <div className="flex space-x-4 overflow-x-auto py-2">
-                {product.gallery.map((img, idx) => (
-                  <button 
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className={`relative w-24 h-24 flex-shrink-0 bg-white rounded-2xl overflow-hidden border-2 transition-colors ${activeImage === idx ? 'border-orange-500' : 'border-transparent opacity-70 hover:opacity-100'}`}
-                  >
-                    <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-contain p-2" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* Right: Details */}
           <div className="flex flex-col justify-center space-y-8">
             <div>
-              <div className="flex items-center space-x-2 mb-3">
-                <span className="text-yellow-400 text-lg">★★★★★</span>
-                <span className="text-sm font-black text-gray-400">{product.rating} / 5</span>
-                <span className="text-gray-300">|</span>
-                <a href="#reviews" className="text-sm font-bold text-orange-600 hover:underline">{product.reviews.length} Reviews</a>
-              </div>
               <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{product.name}</h1>
               <p className="text-3xl font-black text-gray-900">₹{product.price}</p>
             </div>
@@ -120,8 +135,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        {/* Specs & Reviews Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-20">
+        {/* Specs Grid */}
+        <div className="grid grid-cols-1 gap-12 mt-20 max-w-3xl mx-auto">
           {/* Specifications */}
           <div className="bg-white rounded-[32px] p-8 md:p-10 border border-gray-100 shadow-sm">
             <h2 className="text-2xl font-black text-gray-900 mb-6">Technical Specifications</h2>
@@ -133,27 +148,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Reviews */}
-          <div className="bg-white rounded-[32px] p-8 md:p-10 border border-gray-100 shadow-sm" id="reviews">
-            <h2 className="text-2xl font-black text-gray-900 mb-6">Customer Reviews</h2>
-            <div className="space-y-6">
-              {product.reviews.map((review, idx) => (
-                <div key={idx} className="pb-6 border-b border-gray-50 last:border-0 last:pb-0">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="flex text-yellow-400 text-sm">
-                      {Array.from({length: review.rating}).map((_, i) => (
-                        <span key={i}>★</span>
-                      ))}
-                    </div>
-                    <span className="font-bold text-gray-900">{review.user}</span>
-                    <span className="text-xs text-green-700 font-bold bg-green-100 px-2 py-0.5 rounded">Verified</span>
-                  </div>
-                  <p className="text-gray-500 font-medium">{review.comment}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

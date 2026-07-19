@@ -78,6 +78,7 @@ export default function AdminProducts() {
     try {
       setLoading(true);
       const data = await adminApi.get("/products");
+      data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setProducts(data);
     } catch (error) {
       console.error("Failed to fetch products", error);

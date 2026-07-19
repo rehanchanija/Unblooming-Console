@@ -4,19 +4,47 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/lib/CartContext';
-import { MOCK_PRODUCTS } from '@/lib/data';
+import { useEffect } from 'react';
 
 export default function ProductList() {
   const { addToCart } = useCart();
   const router = useRouter();
   
+  const [products, setProducts] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`);
+        if (res.ok) {
+          const data = await res.json();
+          const mappedProducts = data.map((p: any) => ({
+            id: p._id || p.id,
+            name: p.title || p.name,
+            price: p.price,
+            category: p.category,
+            color: p.color,
+            image: p.imageUrl || '',
+            description: p.details || '',
+            specs: p.technicalSpecifications || {},
+            createdAt: p.createdAt
+          }));
+          mappedProducts.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          setProducts(mappedProducts);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const categories = ['All', 'Consoles', 'Accessories'];
   const colors = ['All', 'Red', 'Purple', 'Black'];
 
-  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchCategory = selectedCategory === null || product.category === selectedCategory;
     const matchColor = selectedColor === null || product.color === selectedColor;
     return matchCategory && matchColor;
