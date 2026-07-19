@@ -14,6 +14,7 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     address: '',
     city: '',
     pincode: '',
@@ -49,6 +50,8 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customer: formData.name,
+          email: formData.email,
+          phone: formData.phone,
           total: cartTotal.toString(),
           productName,
           address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
@@ -112,6 +115,10 @@ export default function CheckoutPage() {
                   <div>
                     <label className="block text-sm font-bold text-gray-500 mb-1">Email</label>
                     <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none" />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-bold text-gray-500 mb-1">Phone Number</label>
+                    <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none" />
                   </div>
                 </div>
                 <div>

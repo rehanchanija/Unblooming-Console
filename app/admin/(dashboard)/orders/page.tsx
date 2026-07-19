@@ -23,14 +23,10 @@ export default function AdminOrders() {
     }
   };
 
-  const handleStatusUpdate = async (id: string, currentStatus: string) => {
-    const statuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
-    const currentIndex = statuses.indexOf(currentStatus);
-    const nextStatus = statuses[(currentIndex + 1) % statuses.length];
-    
-    if (confirm(`Change status to ${nextStatus}?`)) {
+  const handleStatusUpdate = async (id: string, newStatus: string) => {
+    if (confirm(`Change status to ${newStatus}?`)) {
       try {
-        await adminApi.patch(`/orders/${id}`, { status: nextStatus });
+        await adminApi.patch(`/orders/${id}`, { status: newStatus });
         fetchOrders();
       } catch (error) {
         console.error('Failed to update status', error);
@@ -78,12 +74,12 @@ export default function AdminOrders() {
                 <p className="font-medium text-gray-700 text-sm mt-1">{order.customer}</p>
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                order.status === 'Placed' ? 'bg-yellow-100 text-yellow-700' :
                 order.status === 'Shipped' ? 'bg-blue-100 text-blue-700' :
                 order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
                 'bg-red-100 text-red-700'
               }`}>
-                {order.status}
+                {order.status || 'Placed'}
               </span>
             </div>
             <div className="flex flex-col space-y-2 text-sm text-gray-500">
@@ -119,7 +115,16 @@ export default function AdminOrders() {
               </div>
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end">
-              <button onClick={() => handleStatusUpdate(order._id || order.id, order.status)} className="text-blue-500 hover:text-blue-700 font-bold text-sm">Update Status</button>
+              <select 
+                value={order.status || 'Placed'} 
+                onChange={(e) => handleStatusUpdate(order._id || order.id, e.target.value)}
+                className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+              >
+                <option value="Placed">Placed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
             </div>
           </div>
         ))}
@@ -129,37 +134,55 @@ export default function AdminOrders() {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden overflow-x-auto w-full">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm">Order ID</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm">Customer</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm">Date</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm">Total</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm">Status</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-sm text-right">Actions</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm whitespace-nowrap">Date</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm min-w-[200px]">Product Name</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm whitespace-nowrap">Customer Name</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm whitespace-nowrap">Email & Phone</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm whitespace-nowrap">Amount</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm whitespace-nowrap">Status</th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filteredOrders.map((order) => (
               <tr key={order._id || order.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 font-bold text-gray-900">{order._id || order.id}</td>
-                <td className="px-6 py-4 font-medium text-gray-700">{order.customer}</td>
-                <td className="px-6 py-4 text-gray-500">{new Date(order.date || order.createdAt).toLocaleDateString()}</td>
-                <td className="px-6 py-4 font-bold text-gray-900">{order.total}</td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{new Date(order.date || order.createdAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4 font-medium text-gray-900">
+                  {order.items && order.items.length > 0 
+                    ? order.items.map((i: any) => `${i.quantity}x ${i.title}`).join(', ') 
+                    : order.productName}
+                </td>
+                <td className="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{order.customer}</td>
+                <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                  <div>{order.email || 'No email'}</div>
+                  <div className="text-sm text-gray-400">{order.phone || 'No phone'}</div>
+                </td>
+                <td className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">₹{order.total}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                    order.status === 'Placed' ? 'bg-yellow-100 text-yellow-700' :
                     order.status === 'Shipped' ? 'bg-blue-100 text-blue-700' :
                     order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
                     'bg-red-100 text-red-700'
                   }`}>
-                    {order.status || 'Pending'}
+                    {order.status || 'Placed'}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <button onClick={() => handleStatusUpdate(order._id || order.id, order.status)} className="text-blue-500 hover:text-blue-700 font-medium">Update Status</button>
+                <td className="px-6 py-4 text-right whitespace-nowrap">
+                  <select 
+                    value={order.status || 'Placed'} 
+                    onChange={(e) => handleStatusUpdate(order._id || order.id, e.target.value)}
+                    className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                  >
+                    <option value="Placed">Placed</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
                 </td>
               </tr>
             ))}

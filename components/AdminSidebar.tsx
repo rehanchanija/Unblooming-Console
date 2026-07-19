@@ -2,13 +2,14 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { LayoutDashboard, Image as ImageIcon, ShoppingBag, Package, Phone, LogOut } from 'lucide-react';
+import { LayoutDashboard, Image as ImageIcon, ShoppingBag, Package, Phone, LogOut, Settings } from 'lucide-react';
 
 export const menuItems = [
   { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
   { name: 'Hero Section', href: '/admin/hero', icon: <ImageIcon size={20} /> },
   { name: 'Collection', href: '/admin/products', icon: <ShoppingBag size={20} /> },
   { name: 'Orders', href: '/admin/orders', icon: <Package size={20} /> },
+  { name: 'Master Settings', href: '/admin/master', icon: <Settings size={20} /> },
   { name: 'Contact Info', href: '/admin/contact', icon: <Phone size={20} /> },
 ];
 
