@@ -2,7 +2,13 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useScroll,
+} from "framer-motion";
 import MagneticButton from "@/components/UI/MagneticButton";
 import Link from "next/link";
 
@@ -58,9 +64,7 @@ export default function Hero() {
         animate={{ y: [0, -40, 0], x: [0, -25, 0] }}
         transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
-        className="pointer-events-none absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 rounded-full bg-accent/20 blur-[90px] animate-pulse-glow"
-      />
+      <motion.div className="pointer-events-none absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 rounded-full bg-accent/20 blur-[90px] animate-pulse-glow" />
 
       {/* Particles */}
       <div className="pointer-events-none absolute inset-0">
@@ -130,7 +134,9 @@ export default function Hero() {
             transition={{ delay: 0.9, duration: 0.6 }}
             className="mx-auto mt-6 max-w-md text-base text-gray-900/60 lg:mx-0"
           >
-            R36MAX packs 18,000+ classic games across 30+ emulators into a compact form factor featuring a unique 1:1 HD square screen. Built for true retro enthusiasts.
+            R36MAX packs 18,000+ classic games across 30+ emulators into a
+            compact form factor featuring a unique 1:1 HD square screen. Built
+            for true retro enthusiasts.
           </motion.p>
 
           <motion.div
@@ -159,7 +165,9 @@ export default function Hero() {
               ["6-8hrs", "Battery"],
             ].map(([num, label]) => (
               <div key={label} className="text-center lg:text-left">
-                <p className="font-display text-2xl font-bold text-gray-900">{num}</p>
+                <p className="font-display text-2xl font-bold text-gray-900">
+                  {num}
+                </p>
                 <p className="text-xs text-gray-900/50">{label}</p>
               </div>
             ))}
@@ -186,7 +194,11 @@ export default function Hero() {
               <div className="absolute inset-0 -z-10 animate-pulse-glow rounded-full bg-primary/40 blur-[70px]" />
               <motion.div
                 animate={{ scale: [1, 1.02, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="relative h-[320px] w-[220px] drop-shadow-[0_30px_60px_rgba(255,43,43,0.35)] sm:h-[420px] sm:w-[290px]"
               >
                 <Image

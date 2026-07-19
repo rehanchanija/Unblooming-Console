@@ -12,6 +12,8 @@ export default function AdminHero() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -24,6 +26,7 @@ export default function AdminHero() {
             buttonText: data.buttonText || '',
             buttonPrice: data.buttonPrice || '',
           });
+          if (data.imageUrl) setImageUrl(data.imageUrl);
         }
       } catch (error) {
         console.error('Failed to fetch hero content', error);
@@ -43,7 +46,22 @@ export default function AdminHero() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await adminApi.post('/content/hero', formData);
+      let finalImageUrl = imageUrl;
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+
+        const uploadRes = await fetch('http://localhost:3001/upload/image', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.message || 'Image upload failed');
+        finalImageUrl = uploadData.url;
+        setImageUrl(finalImageUrl);
+      }
+
+      await adminApi.post('/content/hero', { ...formData, imageUrl: finalImageUrl });
       alert('Hero settings saved successfully!');
     } catch (error) {
       console.error('Failed to save hero settings', error);
@@ -107,6 +125,21 @@ export default function AdminHero() {
               required
             />
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Hero Image</label>
+          {imageUrl && (
+            <div className="mb-4">
+              <img src={imageUrl} alt="Hero" className="h-32 rounded-lg object-contain bg-gray-100" />
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={e => setImageFile(e.target.files?.[0] || null)}
+            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 cursor-pointer"
+          />
         </div>
 
         <button
