@@ -27,18 +27,23 @@ export default function AdminProducts() {
   const [color, setColor] = useState('');
   const [price, setPrice] = useState('');
   const [details, setDetails] = useState('');
-  const initialSpecs = {
-    'Display': '',
-    'Processor (CPU)': '',
-    'Graphics (GPU)': '',
-    'RAM': '',
-    'Battery': '',
-    'Storage': '',
-    'Emulator': '',
-    'Controls': '',
-    'Connectivity': ''
+  const [specificationsList, setSpecificationsList] = useState<{key: string, value: string}[]>([]);
+
+  const addSpecification = () => {
+    setSpecificationsList([...specificationsList, { key: '', value: '' }]);
   };
-  const [technicalSpecifications, setTechnicalSpecifications] = useState<Record<string, string>>(initialSpecs);
+
+  const removeSpecification = (index: number) => {
+    const newList = [...specificationsList];
+    newList.splice(index, 1);
+    setSpecificationsList(newList);
+  };
+
+  const updateSpecification = (index: number, field: 'key' | 'value', val: string) => {
+    const newList = [...specificationsList];
+    newList[index][field] = val;
+    setSpecificationsList(newList);
+  };
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -153,7 +158,7 @@ export default function AdminProducts() {
     setColor('');
     setPrice('');
     setDetails('');
-    setTechnicalSpecifications(initialSpecs);
+    setSpecificationsList([]);
     setExistingImageUrl('');
     setImagePreview('');
     setImageFile(null);
@@ -167,7 +172,11 @@ export default function AdminProducts() {
     setColor(product.color);
     setPrice(product.price);
     setDetails(product.details || '');
-    setTechnicalSpecifications({ ...initialSpecs, ...(product.technicalSpecifications || {}) });
+    
+    const existingSpecs = product.technicalSpecifications || {};
+    const specsArray = Object.entries(existingSpecs).map(([key, value]) => ({ key, value: value as string }));
+    setSpecificationsList(specsArray);
+
     setExistingImageUrl(product.imageUrl || '');
     setImagePreview(product.imageUrl || '');
     setImageFile(null);
@@ -203,9 +212,9 @@ export default function AdminProducts() {
         imageUrl = uploadData.url;
       }
 
-      const specsObject = Object.entries(technicalSpecifications).reduce((acc, [key, value]) => {
-        if (value.trim()) {
-          acc[key] = value.trim();
+      const specsObject = specificationsList.reduce((acc, curr) => {
+        if (curr.key.trim() && curr.value.trim()) {
+          acc[curr.key.trim()] = curr.value.trim();
         }
         return acc;
       }, {} as Record<string, string>);
@@ -316,26 +325,37 @@ export default function AdminProducts() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-3">Technical Specifications (Optional)</label>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="block text-sm font-bold text-gray-700">Technical Specifications (Optional)</label>
+                  <button type="button" onClick={addSpecification} className="text-sm font-bold text-orange-500 hover:text-orange-600 transition-colors bg-orange-50 px-3 py-1 rounded-lg">
+                    + Add Spec
+                  </button>
+                </div>
                 
-                <div className="space-y-3 bg-gray-50/50 p-4 rounded-2xl border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-3">
-                  {Object.keys(initialSpecs).map((specKey) => (
-                    <div key={specKey} className="flex flex-col space-y-1">
-                      <label className="text-xs font-bold text-gray-500">{specKey}</label>
-                      <input
-                        type="text"
-                        value={technicalSpecifications[specKey] || ''}
-                        onChange={(e) => {
-                          setTechnicalSpecifications(prev => ({
-                            ...prev,
-                            [specKey]: e.target.value
-                          }));
-                        }}
-                        placeholder={`Enter ${specKey.toLowerCase()}...`}
-                        className="w-full px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                      />
-                    </div>
-                  ))}
+                <div className="space-y-3 bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
+                  {specificationsList.length === 0 ? (
+                    <p className="text-sm text-gray-500 text-center py-2">No specifications added yet.</p>
+                  ) : (
+                    specificationsList.map((spec, index) => (
+                      <div key={index} className="flex space-x-2 items-start">
+                        <input
+                          type="text"
+                          value={spec.key}
+                          onChange={(e) => updateSpecification(index, 'key', e.target.value)}
+                          placeholder="Label (e.g. Storage)"
+                          className="w-1/3 px-3 py-2 text-sm rounded-xl border border-gray-200 bg-white text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        />
+                        <input
+                          type="text"
+                          value={spec.value}
+                          onChange={(e) => updateSpecification(index, 'value', e.target.value)}
+                          placeholder="Value (e.g. 64GB)"
+                          className="flex-1 px-3 py-2 text-sm rounded-xl border border-gray-200 bg-white text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        />
+                        <button type="button" onClick={() => removeSpecification(index)} className="p-2 text-gray-400 hover:text-red-500 rounded-xl hover:bg-red-50 transition-colors">✕</button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
