@@ -1,16 +1,40 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement registration logic
-    alert('Registration submitted for: ' + name);
+    setError('');
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:3001/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, password }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+      
+      alert('Registration successful! Please log in.');
+      router.push('/login');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -25,6 +49,12 @@ export default function RegisterPage() {
           <h1 className="text-xl font-bold text-gray-800">Create an Account</h1>
           <p className="text-gray-500 text-sm mt-1">Join us to start shopping</p>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -52,6 +82,18 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50 text-gray-900 transition-colors"
+              placeholder="+91 1234567890"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
             <label className="block text-sm font-bold text-gray-700">Password</label>
             <input
               type="password"
@@ -65,9 +107,10 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-gray-900 hover:bg-orange-500 text-white font-bold py-4 rounded-xl transition-all transform hover:-translate-y-1 shadow-lg shadow-gray-900/20 hover:shadow-orange-500/30"
+            disabled={isLoading}
+            className="w-full bg-gray-900 hover:bg-orange-500 text-white font-bold py-4 rounded-xl transition-all transform hover:-translate-y-1 shadow-lg shadow-gray-900/20 hover:shadow-orange-500/30 disabled:opacity-70 disabled:transform-none"
           >
-            Sign Up
+            {isLoading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
 

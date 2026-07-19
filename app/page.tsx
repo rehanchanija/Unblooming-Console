@@ -294,7 +294,7 @@ export default function SinglePageStore() {
                 className="flex items-center space-x-3 hover:text-orange-500 transition-colors bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
               >
                 <span className="text-lg">📧</span>
-                <span>unbloomingsupport@gmail.com</span>
+                <span>supportunblooming@gmail.com</span>
               </a>
               <a
                 href="tel:+916265562258"
@@ -303,10 +303,15 @@ export default function SinglePageStore() {
                 <span className="text-lg">📞</span>
                 <span>+91 62655 62258</span>
               </a>
-              <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              {/* <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <span className="text-lg shrink-0">📍</span>
-                <span className="truncate" title="Sadar Bazar, Bhatapara, Raipur, Chhattisgarh">Sadar Bazar, Bhatapara, Raipur, Chhattisgarh</span>
-              </div>
+                <span
+                  className="truncate"
+                  title="Sadar Bazar, Bhatapara, Raipur, Chhattisgarh"
+                >
+                  Sadar Bazar, Bhatapara, Raipur, Chhattisgarh
+                </span>
+              </div> */}
             </div>
           </div>
         </div>

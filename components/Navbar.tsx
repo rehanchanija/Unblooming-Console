@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/lib/CartContext';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const { itemCount } = useCart();
-
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -55,8 +56,31 @@ export default function Navbar() {
           <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 transition-colors">Details</a>
         </div>
 
-        {/* Always Visible Cart Button */}
-        <div>
+        <div className="flex items-center space-x-4">
+          {/* Auth State */}
+          <div className="hidden md:block">
+            {user ? (
+              <div className="group relative">
+                <span className="text-sm font-bold text-gray-900 cursor-pointer hover:text-orange-500 transition-colors">
+                  {user.name}
+                </span>
+                <div className="absolute top-full right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                  <button 
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login" className="text-sm font-bold text-gray-900 hover:text-orange-500 transition-colors">
+                Login
+              </Link>
+            )}
+          </div>
+
+          {/* Always Visible Cart Button */}
           <Link 
             href="/cart"
             className="relative flex items-center bg-gray-900 hover:bg-orange-500 text-white px-4 md:px-5 py-2.5 rounded-full transition-all shadow-sm group"
@@ -78,6 +102,11 @@ export default function Navbar() {
           <a href="#home" onClick={(e) => handleScrollTo(e, 'home')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Home</a>
           <a href="#about" onClick={(e) => handleScrollTo(e, 'about')} className="hover:text-orange-500 block py-2 border-b border-gray-50">About Us</a>
           <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Details</a>
+          {user ? (
+            <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="text-left text-red-500 block py-2 border-b border-gray-50">Logout ({user.name})</button>
+          ) : (
+            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-orange-500 block py-2 border-b border-gray-50">Login</Link>
+          )}
         </div>
       )}
     </nav>
