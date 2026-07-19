@@ -83,8 +83,8 @@ export default function Navbar() {
         <div className="flex w-1/3 md:w-1/4 justify-end items-center space-x-2 md:space-x-4">
           
           {/* Cart Icon */}
-          <button 
-            onClick={() => setIsCartOpen(true)}
+          <Link 
+            href="/cart"
             className="relative flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors"
           >
             <ShoppingBag size={24} strokeWidth={2.2} />
@@ -93,7 +93,7 @@ export default function Navbar() {
                 {itemCount}
               </span>
             )}
-          </button>
+          </Link>
 
           {/* Profile Icon / User Name */}
           <div className="flex items-center">

@@ -18,15 +18,16 @@ export default function AdminHero() {
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        const data = await adminApi.get('/content/hero');
-        if (data && Object.keys(data).length > 0) {
+        const resData = await adminApi.get('/content/hero');
+        if (resData && resData.data) {
+          const content = resData.data;
           setFormData({
-            title: data.title || '',
-            subtitle: data.subtitle || '',
-            buttonText: data.buttonText || '',
-            buttonPrice: data.buttonPrice || '',
+            title: content.title || '',
+            subtitle: content.subtitle || '',
+            buttonText: content.buttonText || '',
+            buttonPrice: content.buttonPrice || '',
           });
-          if (data.imageUrl) setImageUrl(data.imageUrl);
+          if (content.imageUrl) setImageUrl(content.imageUrl);
         }
       } catch (error) {
         console.error('Failed to fetch hero content', error);

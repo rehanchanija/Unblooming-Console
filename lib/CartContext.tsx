@@ -29,6 +29,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let storedUserId = localStorage.getItem('unbloom_cart_session');
@@ -64,7 +65,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } else {
       setCart([...cart, item]);
     }
-    setIsCartOpen(true);
+    setToastMessage("Successfully added to cart!");
+    setTimeout(() => setToastMessage(null), 3000);
 
     try {
       const res = await fetch(`${getApiUrl()}/cart/${userId}`, {
@@ -161,6 +163,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cartTotal
     }}>
       {children}
+      {toastMessage && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white font-medium px-8 py-4 rounded-full shadow-2xl z-[100] animate-[bounce_1s_ease-in-out_infinite] border border-gray-800">
+          <div className="flex items-center space-x-2">
+            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
     </CartContext.Provider>
   );
 }
