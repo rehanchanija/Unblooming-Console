@@ -19,7 +19,7 @@ export type Order = {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, name: string) => void;
+  login: (userData: User) => void;
   logout: () => void;
   orders: Order[];
   addOrder: (order: Order) => void;
@@ -38,10 +38,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedOrders) setOrders(JSON.parse(savedOrders));
   }, []);
 
-  const login = (email: string, name: string) => {
-    const newUser = { id: Date.now().toString(), email, name };
-    setUser(newUser);
-    localStorage.setItem('mockUser', JSON.stringify(newUser));
+  const login = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('mockUser', JSON.stringify(userData));
   };
 
   const logout = () => {

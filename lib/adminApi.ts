@@ -1,11 +1,11 @@
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = "http://localhost:3001";
 
 export const adminApi = {
   async get(endpoint: string) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (!response.ok) {
@@ -16,9 +16,9 @@ export const adminApi = {
 
   async post(endpoint: string, data: any) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
@@ -30,9 +30,9 @@ export const adminApi = {
 
   async patch(endpoint: string, data: any) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
@@ -44,7 +44,7 @@ export const adminApi = {
 
   async delete(endpoint: string) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
     if (!response.ok) {
       throw new Error(`DELETE ${endpoint} failed`);

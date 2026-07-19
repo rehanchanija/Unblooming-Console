@@ -7,14 +7,32 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual admin auth logic with NestJS backend
-    if (email === 'admin@unblooming.com' && password === 'admin') {
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:3001/auth/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+      
       alert('Admin login successful!');
       router.push('/admin');
-    } else {
-      alert('Invalid admin credentials. Use admin@unblooming.com / admin');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,6 +48,12 @@ export default function AdminLoginPage() {
           </div>
           <h1 className="text-xl font-bold text-white">Secure Login</h1>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-900/50 border border-red-500 text-red-200 rounded-xl text-sm font-medium">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">

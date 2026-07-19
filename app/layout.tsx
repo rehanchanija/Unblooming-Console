@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import SmoothScrollProvider from "@/lib/SmoothScrollProvider";
 import { AuthProvider } from "@/lib/AuthContext";
 import { CartProvider } from "@/lib/CartContext";
-import Navbar from "@/components/Navbar";
+import NavbarWrapper from "@/components/NavbarWrapper";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -61,7 +61,7 @@ export default function RootLayout({
           <AuthProvider>
             <CartProvider>
               <div className="noise-overlay" aria-hidden="true" />
-              <Navbar />
+              <NavbarWrapper />
               {children}
             </CartProvider>
           </AuthProvider>
