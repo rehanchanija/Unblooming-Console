@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { LayoutDashboard, Image as ImageIcon, ShoppingBag, Package, Phone } from 'lucide-react';
+import { LayoutDashboard, Image as ImageIcon, ShoppingBag, Package, Phone, LogOut } from 'lucide-react';
 
 export const menuItems = [
   { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
@@ -14,6 +14,7 @@ export const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <>
@@ -46,7 +47,7 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-gray-800 space-y-3">
         <Link
           href="/"
           className="flex items-center justify-center space-x-2 w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors font-medium text-sm"
@@ -54,6 +55,16 @@ export default function AdminSidebar() {
           <span>⬅️</span>
           <span>Back to Store</span>
         </Link>
+        <button
+          onClick={() => {
+            localStorage.removeItem('adminUser');
+            router.push('/admin/login');
+          }}
+          className="flex items-center justify-center space-x-2 w-full px-4 py-3 bg-red-900/30 hover:bg-red-900/50 text-red-400 hover:text-red-300 rounded-xl transition-colors font-medium text-sm border border-red-900/50"
+        >
+          <LogOut size={16} />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
     </>
