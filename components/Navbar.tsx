@@ -14,8 +14,6 @@ export default function Navbar() {
   const { itemCount } = useCart();
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Add state for mobile profile dropdown toggle since hover doesn't work well on mobile
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,6 +74,9 @@ export default function Navbar() {
           <a href="#home" onClick={(e) => handleScrollTo(e, 'home')} className="hover:text-orange-500 transition-colors">Home</a>
           <a href="#about" onClick={(e) => handleScrollTo(e, 'about')} className="hover:text-orange-500 transition-colors">About Us</a>
           <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 transition-colors">Details</a>
+          {user && (
+            <Link href="/orders" className="hover:text-orange-500 transition-colors">Orders</Link>
+          )}
         </div>
 
         {/* Right: Cart and Profile */}
@@ -94,42 +95,17 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Profile Icon */}
-          <div className="relative group">
-            <button 
-              className="flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors"
-              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-            >
-              <User size={26} strokeWidth={2.2} />
-            </button>
-            
-            {/* Dropdown Menu */}
-            <div className={`absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 transition-all z-50 md:group-hover:opacity-100 md:group-hover:visible ${isProfileDropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible md:opacity-0 md:invisible'}`}>
-              {user ? (
-                <>
-                  <div className="px-4 py-3 border-b border-gray-50">
-                    <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                  </div>
-                  <Link href="/profile" className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50 transition-colors">
-                    View Profile
-                  </Link>
-                  <button 
-                    onClick={() => {
-                      logout();
-                      setIsProfileDropdownOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 rounded-b-xl transition-colors border-t border-gray-50"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link href="/login" onClick={() => setIsProfileDropdownOpen(false)} className="block px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 rounded-xl transition-colors text-center">
-                  Login / Register
-                </Link>
-              )}
-            </div>
+          {/* Profile Icon / User Name */}
+          <div className="flex items-center">
+            {user ? (
+              <Link href="/profile" className="font-black text-gray-900 hover:text-orange-500 transition-colors text-sm truncate max-w-[100px] md:max-w-[150px]">
+                {user.name}
+              </Link>
+            ) : (
+              <Link href="/login" className="flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors">
+                <User size={26} strokeWidth={2.2} />
+              </Link>
+            )}
           </div>
 
         </div>
@@ -141,6 +117,9 @@ export default function Navbar() {
           <a href="#home" onClick={(e) => handleScrollTo(e, 'home')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Home</a>
           <a href="#about" onClick={(e) => handleScrollTo(e, 'about')} className="hover:text-orange-500 block py-2 border-b border-gray-50">About Us</a>
           <a href="#details" onClick={(e) => handleScrollTo(e, 'details')} className="hover:text-orange-500 block py-2 border-b border-gray-50">Details</a>
+          {user && (
+            <Link href="/orders" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-orange-500 block py-2 border-b border-gray-50">Orders</Link>
+          )}
         </div>
       )}
     </nav>
