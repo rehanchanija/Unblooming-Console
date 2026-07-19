@@ -29,21 +29,18 @@ export default function AdminLayoutWrapper({
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0  border-t border-gray-800 z-50 flex justify-around items-center px-2 py-3 safe-area-pb">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-50 flex justify-around items-center px-2 py-3 safe-area-pb">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex flex-col items-center p-2 rounded-xl transition-all min-w-[64px] ${
+              className={`flex flex-col items-center p-2 rounded-xl transition-all ${
                 isActive ? "text-orange-500" : "text-gray-400 hover:text-white"
               }`}
             >
-              <span className="text-xl mb-1">{item.icon}</span>
-              <span className="text-[10px] font-medium leading-none">
-                {item.name}
-              </span>
+              <span className="text-2xl">{item.icon}</span>
             </Link>
           );
         })}
