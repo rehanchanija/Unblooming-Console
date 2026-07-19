@@ -69,10 +69,14 @@ export default function AdminProductDetail({ params }: { params: Promise<{ id: s
               <p className="text-3xl font-black text-gray-900">{product.title || product.name}</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4 border-t border-gray-100">
               <div>
                 <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Price</h2>
                 <p className="text-xl font-bold text-orange-500">{product.price}</p>
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Stock</h2>
+                <p className="text-xl font-bold text-gray-900">{product.stock ?? 0}</p>
               </div>
               <div>
                 <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Category</h2>

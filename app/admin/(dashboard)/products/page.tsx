@@ -29,6 +29,7 @@ export default function AdminProducts() {
   const [category, setCategory] = useState("");
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
   const [details, setDetails] = useState("");
   const [specificationsList, setSpecificationsList] = useState<
     { key: string; value: string }[]
@@ -168,6 +169,7 @@ export default function AdminProducts() {
     setCategory("");
     setColor("");
     setPrice("");
+    setStock("");
     setDetails("");
     setSpecificationsList([]);
     setExistingImageUrl("");
@@ -182,6 +184,7 @@ export default function AdminProducts() {
     setCategory(product.category);
     setColor(product.color);
     setPrice(product.price);
+    setStock(product.stock !== undefined ? product.stock.toString() : "");
     setDetails(product.details || "");
 
     const existingSpecs = product.technicalSpecifications || {};
@@ -247,6 +250,7 @@ export default function AdminProducts() {
         category,
         color,
         price,
+        stock: stock ? parseInt(stock, 10) : 0,
         details,
         technicalSpecifications: specsObject,
         imageUrl: finalImageUrl,
@@ -366,17 +370,32 @@ export default function AdminProducts() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Price
-                </label>
-                <input
-                  required
-                  type="text"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">
+                    Price
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">
+                    Stock
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    min="0"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div>
@@ -524,6 +543,10 @@ export default function AdminProducts() {
                 <span className="font-semibold text-gray-700">Color:</span>{" "}
                 {product.color}
               </p>
+              <p>
+                <span className="font-semibold text-gray-700">Stock:</span>{" "}
+                {product.stock ?? 0}
+              </p>
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end space-x-4 items-center">
               <Link
@@ -585,6 +608,9 @@ export default function AdminProducts() {
                 Color
               </th>
               <th className="px-6 py-4 font-bold text-gray-700 text-sm">
+                Stock
+              </th>
+              <th className="px-6 py-4 font-bold text-gray-700 text-sm">
                 Price
               </th>
               <th className="px-6 py-4 font-bold text-gray-700 text-sm text-right">
@@ -622,6 +648,7 @@ export default function AdminProducts() {
                 </td>
                 <td className="px-6 py-4 text-gray-500">{product.category}</td>
                 <td className="px-6 py-4 text-gray-500">{product.color}</td>
+                <td className="px-6 py-4 text-gray-500">{product.stock ?? 0}</td>
                 <td className="px-6 py-4 font-bold text-gray-900">
                   {product.price}
                 </td>
