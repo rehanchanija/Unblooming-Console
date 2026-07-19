@@ -47,7 +47,7 @@ export default function SinglePageStore() {
               >
                 Order Now - ₹4,499
               </button>
-              <div className="flex -space-x-2">
+              {/* <div className="flex -space-x-2">
                 <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">
                   ⭐
                 </div>
@@ -57,7 +57,7 @@ export default function SinglePageStore() {
                 <div className="w-10 h-10 rounded-full bg-gray-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">
                   4.9
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
