@@ -5,6 +5,7 @@ import { adminApi } from '../../../../lib/adminApi';
 export default function AdminOrders() {
   const [searchQuery, setSearchQuery] = useState('');
   const [orders, setOrders] = useState<any[]>([]);
+  const [statusOptions, setStatusOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,8 +15,15 @@ export default function AdminOrders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const data = await adminApi.get('/orders');
-      setOrders(data);
+      const [ordersData, statusData] = await Promise.all([
+        adminApi.get('/orders'),
+        adminApi.get('/order-status').catch(() => [])
+      ]);
+      setOrders(ordersData);
+      
+      // Ensure default statuses exist if DB is empty
+      const defaultStatuses = [{name: 'Placed'}, {name: 'Shipped'}, {name: 'Delivered'}, {name: 'Cancelled'}];
+      setStatusOptions(statusData.length > 0 ? statusData : defaultStatuses);
     } catch (error) {
       console.error('Failed to fetch orders', error);
     } finally {
@@ -118,12 +126,11 @@ export default function AdminOrders() {
               <select 
                 value={order.status || 'Placed'} 
                 onChange={(e) => handleStatusUpdate(order._id || order.id, e.target.value)}
-                className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer max-w-[120px]"
               >
-                <option value="Placed">Placed</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
+                {statusOptions.map(opt => (
+                  <option key={opt._id || opt.name} value={opt.name}>{opt.name}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -176,12 +183,11 @@ export default function AdminOrders() {
                   <select 
                     value={order.status || 'Placed'} 
                     onChange={(e) => handleStatusUpdate(order._id || order.id, e.target.value)}
-                    className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                    className="bg-white border border-gray-200 rounded-lg text-sm px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer max-w-[150px]"
                   >
-                    <option value="Placed">Placed</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
+                    {statusOptions.map(opt => (
+                      <option key={opt._id || opt.name} value={opt.name}>{opt.name}</option>
+                    ))}
                   </select>
                 </td>
               </tr>
