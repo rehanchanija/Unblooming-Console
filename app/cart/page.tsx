@@ -29,28 +29,31 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
-            {items.map((item) => (
-              <div key={item.id} className="flex flex-col sm:flex-row items-center sm:items-start bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm relative">
+            {items.map((item) => {
+              const numericPrice = parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) || 0;
+              return (
+              <div key={item.productId} className="flex flex-col sm:flex-row items-center sm:items-start bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm relative">
                 <div className="relative w-32 h-32 bg-[#0a0a0a] rounded-2xl overflow-hidden flex-shrink-0 mb-4 sm:mb-0">
-                  <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
+                  <Image src={item.imageUrl || '/placeholder.png'} alt={item.title || 'Product Image'} fill className="object-contain p-2" />
                 </div>
                 
                 <div className="sm:ml-6 flex-grow text-center sm:text-left w-full">
-                  <h3 className="font-bold text-xl text-gray-900 mb-2">{item.name}</h3>
+                  <h3 className="font-bold text-xl text-gray-900 mb-2">{item.title}</h3>
                   <div className="flex justify-between items-center mt-4 sm:mt-8">
                     <span className="font-medium text-gray-500">Qty: {item.quantity}</span>
-                    <span className="font-black text-2xl text-gray-900">₹{item.price * item.quantity}</span>
+                    <span className="font-black text-2xl text-gray-900">₹{numericPrice * item.quantity}</span>
                   </div>
                 </div>
                 
                 <button 
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item.productId)}
                   className="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
               </div>
-            ))}
+            );
+            })}
           </div>
 
           {/* Order Summary */}
