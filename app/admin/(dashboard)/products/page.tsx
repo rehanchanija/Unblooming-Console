@@ -4,10 +4,23 @@ import { adminApi } from '../../../../lib/adminApi';
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<any[]>([]);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+  const [colorsList, setColorsList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMasterModalOpen, setIsMasterModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Edit & Preview States
+  const [editProductId, setEditProductId] = useState<string | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const [fullscreenPreview, setFullscreenPreview] = useState<string | null>(null);
 
+  // Master Data State
+  const [newCategory, setNewCategory] = useState('');
+  const [newColor, setNewColor] = useState('');
+  
   // Form State
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
@@ -30,7 +43,21 @@ export default function AdminProducts() {
 
   useEffect(() => {
     fetchProducts();
+    fetchMasterData();
   }, []);
+
+  const fetchMasterData = async () => {
+    try {
+      const [catData, colData] = await Promise.all([
+        adminApi.get('/categories'),
+        adminApi.get('/colors')
+      ]);
+      setCategoriesList(catData);
+      setColorsList(colData);
+    } catch (error) {
+      console.error('Failed to fetch master data', error);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -55,7 +82,85 @@ export default function AdminProducts() {
     }
   };
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await adminApi.post('/categories', { name: newCategory });
+      setNewCategory('');
+      fetchMasterData();
+    } catch (error) {
+      console.error('Failed to add category', error);
+    }
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      await adminApi.delete(`/categories/${id}`);
+      fetchMasterData();
+    } catch (error) {
+      console.error('Failed to delete category', error);
+    }
+  };
+
+  const handleAddColor = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await adminApi.post('/colors', { name: newColor });
+      setNewColor('');
+      fetchMasterData();
+    } catch (error) {
+      console.error('Failed to add color', error);
+    }
+  };
+
+  const handleDeleteColor = async (id: string) => {
+    try {
+      await adminApi.delete(`/colors/${id}`);
+      fetchMasterData();
+    } catch (error) {
+      console.error('Failed to delete color', error);
+    }
+  };
+
+  const resetForm = () => {
+    setEditProductId(null);
+    setTitle('');
+    setCategory('');
+    setColor('');
+    setPrice('');
+    setDetails('');
+    setTechnicalSpecifications(initialSpecs);
+    setExistingImageUrl('');
+    setImagePreview('');
+    setImageFile(null);
+    setIsModalOpen(false);
+  };
+
+  const handleEditClick = (product: any) => {
+    setEditProductId(product._id || product.id);
+    setTitle(product.title || product.name);
+    setCategory(product.category);
+    setColor(product.color);
+    setPrice(product.price);
+    setDetails(product.details || '');
+    setTechnicalSpecifications({ ...initialSpecs, ...(product.technicalSpecifications || {}) });
+    setExistingImageUrl(product.imageUrl || '');
+    setImagePreview(product.imageUrl || '');
+    setImageFile(null);
+    setIsModalOpen(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImagePreview(existingImageUrl);
+    }
+  };
+
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -81,30 +186,29 @@ export default function AdminProducts() {
         return acc;
       }, {} as Record<string, string>);
 
-      // Create product
-      await adminApi.post('/products', {
+      const finalImageUrl = imageUrl || existingImageUrl;
+
+      const payload = {
         title,
         category,
         color,
         price,
         details,
         technicalSpecifications: specsObject,
-        imageUrl,
-      });
+        imageUrl: finalImageUrl,
+      };
 
-      // Reset and close
-      setIsModalOpen(false);
-      setTitle('');
-      setCategory('');
-      setColor('');
-      setPrice('');
-      setDetails('');
-      setTechnicalSpecifications(initialSpecs);
-      setImageFile(null);
+      if (editProductId) {
+        await adminApi.patch(`/products/${editProductId}`, payload);
+      } else {
+        await adminApi.post('/products', payload);
+      }
+
+      resetForm();
       fetchProducts();
     } catch (error) {
-      console.error('Failed to add product', error);
-      alert('Failed to add product');
+      console.error('Failed to save product', error);
+      alert('Failed to save product');
     } finally {
       setIsSubmitting(false);
     }
@@ -116,52 +220,75 @@ export default function AdminProducts() {
     <div>
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Manage Collection</h1>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-6 py-2.5 rounded-xl transition-colors w-full md:w-auto shadow-lg shadow-gray-900/20"
-        >
-          + Add New Product
-        </button>
+        <div className="flex gap-3 w-full md:w-auto">
+          <button 
+            onClick={() => setIsMasterModalOpen(true)}
+            className="bg-white border-2 border-gray-900 hover:bg-gray-50 text-gray-900 font-bold px-6 py-2.5 rounded-xl transition-colors shadow-lg shadow-gray-900/5"
+          >
+            Manage Categories/Colors
+          </button>
+          <button 
+            onClick={() => { resetForm(); setIsModalOpen(true); }}
+            className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-6 py-2.5 rounded-xl transition-colors shadow-lg shadow-gray-900/20"
+          >
+            + Add New Product
+          </button>
+        </div>
       </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
             <div className="p-6 border-b border-gray-100 flex justify-between items-center shrink-0">
-              <h2 className="text-xl font-bold text-gray-900">Add New Product</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+              <h2 className="text-xl font-bold text-gray-900">{editProductId ? 'Edit Product' : 'Add New Product'}</h2>
+              <button onClick={resetForm} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             
-            <form onSubmit={handleAddProduct} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
+            <form onSubmit={handleSaveProduct} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
-                <input required type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+                <input required type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none" />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">Category</label>
-                  <input required type="text" value={category} onChange={e => setCategory(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+                  <select required value={category} onChange={e => setCategory(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    <option value="">Select Category</option>
+                    {categoriesList.map(cat => (
+                      <option key={cat._id} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">Color</label>
-                  <input required type="text" value={color} onChange={e => setColor(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+                  <select required value={color} onChange={e => setColor(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    <option value="">Select Color</option>
+                    {colorsList.map(col => (
+                      <option key={col._id} value={col.name}>{col.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Price</label>
-                <input required type="text" value={price} onChange={e => setPrice(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+                <input required type="text" value={price} onChange={e => setPrice(e.target.value)} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none" />
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Product Image</label>
-                <input required type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 cursor-pointer" />
+                {imagePreview && (
+                  <div className="mb-3 w-32 h-32 rounded-xl bg-gray-100 overflow-hidden border border-gray-200">
+                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <input required={!editProductId} type="file" accept="image/*" onChange={handleImageChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 cursor-pointer" />
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Details (Optional)</label>
-                <textarea value={details} onChange={e => setDetails(e.target.value)} rows={3} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none"></textarea>
+                <textarea value={details} onChange={e => setDetails(e.target.value)} rows={3} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"></textarea>
               </div>
 
               <div>
@@ -181,7 +308,7 @@ export default function AdminProducts() {
                           }));
                         }}
                         placeholder={`Enter ${specKey.toLowerCase()}...`}
-                        className="w-full px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        className="w-full px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
                       />
                     </div>
                   ))}
@@ -189,7 +316,7 @@ export default function AdminProducts() {
               </div>
 
               <div className="pt-4 flex justify-end space-x-3">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">Cancel</button>
+                <button type="button" onClick={resetForm} className="px-5 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">Cancel</button>
                 <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 rounded-xl font-bold bg-gray-900 text-white hover:bg-orange-500 transition-colors shadow-lg disabled:opacity-70">
                   {isSubmitting ? 'Saving...' : 'Save Product'}
                 </button>
@@ -198,14 +325,21 @@ export default function AdminProducts() {
           </div>
         </div>
       )}
-      
+
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {products.map((product) => (
           <div key={product._id || product.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col space-y-3">
             <div className="flex justify-between items-start">
               <div className="flex items-center space-x-3">
-                {product.imageUrl && <img src={product.imageUrl} alt={product.title} className="w-12 h-12 rounded-lg object-cover bg-gray-100" />}
+                {product.imageUrl && (
+                  <img 
+                    src={product.imageUrl} 
+                    alt={product.title} 
+                    className="w-12 h-12 rounded-lg object-cover bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity" 
+                    onClick={() => setFullscreenPreview(product.imageUrl)}
+                  />
+                )}
                 <h3 className="font-bold text-gray-900 text-lg leading-tight">{product.title || product.name}</h3>
               </div>
               <span className="font-black text-orange-500">{product.price}</span>
@@ -215,7 +349,7 @@ export default function AdminProducts() {
               <p><span className="font-semibold text-gray-700">Color:</span> {product.color}</p>
             </div>
             <div className="pt-3 border-t border-gray-50 flex justify-end space-x-4">
-              <button className="text-blue-500 hover:text-blue-700 font-bold text-sm">Edit</button>
+              <button onClick={() => handleEditClick(product)} className="text-blue-500 hover:text-blue-700 font-bold text-sm">Edit</button>
               <button onClick={() => handleDelete(product._id || product.id)} className="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>
             </div>
           </div>
@@ -240,7 +374,12 @@ export default function AdminProducts() {
               <tr key={product._id || product.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-3">
                   {product.imageUrl ? (
-                    <img src={product.imageUrl} alt={product.title} className="w-10 h-10 rounded-lg object-cover bg-gray-100" />
+                    <img 
+                      src={product.imageUrl} 
+                      alt={product.title} 
+                      className="w-10 h-10 rounded-lg object-cover bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity" 
+                      onClick={() => setFullscreenPreview(product.imageUrl)}
+                    />
                   ) : (
                     <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-xs text-gray-400">No Img</div>
                   )}
@@ -250,7 +389,7 @@ export default function AdminProducts() {
                 <td className="px-6 py-4 text-gray-500">{product.color}</td>
                 <td className="px-6 py-4 font-bold text-gray-900">{product.price}</td>
                 <td className="px-6 py-4 text-right space-x-3">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium">Edit</button>
+                  <button onClick={() => handleEditClick(product)} className="text-blue-500 hover:text-blue-700 font-medium">Edit</button>
                   <button onClick={() => handleDelete(product._id || product.id)} className="text-red-500 hover:text-red-700 font-medium">Delete</button>
                 </td>
               </tr>
@@ -258,6 +397,74 @@ export default function AdminProducts() {
           </tbody>
         </table>
       </div>
+      {isMasterModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center shrink-0">
+              <h2 className="text-xl font-bold text-gray-900">Manage Master Data</h2>
+              <button onClick={() => setIsMasterModalOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            
+            <div className="p-6 space-y-8 overflow-y-auto flex-1 min-h-0">
+              {/* Category Management */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-3 text-lg">Categories</h3>
+                <form onSubmit={handleAddCategory} className="flex gap-2 mb-4">
+                  <input required type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New category name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
+                  <button type="submit" className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl transition-colors text-sm">Add</button>
+                </form>
+                <div className="flex flex-wrap gap-2">
+                  {categoriesList.map(cat => (
+                    <div key={cat._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-2 text-sm text-gray-700">
+                      <span>{cat.name}</span>
+                      <button onClick={() => handleDeleteCategory(cat._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">✕</button>
+                    </div>
+                  ))}
+                  {categoriesList.length === 0 && <span className="text-gray-400 text-sm">No categories added yet.</span>}
+                </div>
+              </div>
+
+              {/* Color Management */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-3 text-lg">Colors</h3>
+                <form onSubmit={handleAddColor} className="flex gap-2 mb-4">
+                  <input required type="text" value={newColor} onChange={e => setNewColor(e.target.value)} placeholder="New color name..." className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm" />
+                  <button type="submit" className="bg-gray-900 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl transition-colors text-sm">Add</button>
+                </form>
+                <div className="flex flex-wrap gap-2">
+                  {colorsList.map(col => (
+                    <div key={col._id} className="bg-gray-100 pl-3 pr-1 py-1 rounded-full flex items-center gap-2 text-sm text-gray-700">
+                      <span>{col.name}</span>
+                      <button onClick={() => handleDeleteColor(col._id)} className="bg-white text-gray-400 hover:text-red-500 p-1 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">✕</button>
+                    </div>
+                  ))}
+                  {colorsList.length === 0 && <span className="text-gray-400 text-sm">No colors added yet.</span>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Image Preview Modal */}
+      {fullscreenPreview && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setFullscreenPreview(null)}>
+          <div className="relative max-w-4xl max-h-[90vh] flex items-center justify-center">
+            <button 
+              onClick={() => setFullscreenPreview(null)} 
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 font-bold text-xl"
+            >
+              ✕ Close
+            </button>
+            <img 
+              src={fullscreenPreview} 
+              alt="Fullscreen Preview" 
+              className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl" 
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
