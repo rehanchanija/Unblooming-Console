@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import ProductList from "@/components/ProductList";
 
 export default function SinglePageStore() {
@@ -10,6 +11,27 @@ export default function SinglePageStore() {
     address: "",
     phone: "",
   });
+
+  const [heroProduct, setHeroProduct] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchHeroProduct = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            setHeroProduct(data[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch hero product", error);
+      }
+    };
+    fetchHeroProduct();
+  }, []);
 
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,42 +56,36 @@ export default function SinglePageStore() {
               New Arrival
             </div>
             <h1 className="text-5xl md:text-6xl font-black text-gray-900 leading-tight tracking-tight">
-              Relive your best childhood memories.
+              {heroProduct?.title}
             </h1>
-            <p className="text-xl text-gray-500 font-medium max-w-md leading-relaxed">
-              Meet the R36MAX. The ultimate retro handheld gaming console with a
-              stunning IPS display and 18,000+ pre-loaded games ready to play.
+            <p className="text-xl text-gray-500 font-medium max-w-md leading-relaxed line-clamp-3">
+              {heroProduct?.details}
             </p>
             <div className="pt-4 flex items-center space-x-6">
-              <button
-                onClick={scrollToBuy}
-                className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1"
-              >
-                Order Now - ₹4,499
-              </button>
-              {/* <div className="flex -space-x-2">
-                <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">
-                  ⭐
-                </div>
-                <div className="w-10 h-10 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-xs">
-                  ⭐
-                </div>
-                <div className="w-10 h-10 rounded-full bg-gray-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">
-                  4.9
-                </div>
-              </div> */}
+              {heroProduct && (
+                <button
+                  onClick={() => {
+                    router.push(`/product/${heroProduct._id || heroProduct.id}`);
+                  }}
+                  className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1"
+                >
+                  Order Now - ₹{heroProduct.price}
+                </button>
+              )}
             </div>
           </div>
 
           <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto order-1 md:order-2 mb-8 md:mb-0">
-            <Image
-              src="/hero-r36max.png"
-              alt="R36MAX Retro Console"
-              fill
-              className="object-contain"
-              style={{ animation: "float 6s ease-in-out infinite" }}
-              priority
-            />
+            {heroProduct && (
+              <Image
+                src={heroProduct.imageUrl || heroProduct.variants?.[0]?.imageUrl || ""}
+                alt={heroProduct.title || "Product Image"}
+                fill
+                className="object-contain"
+                style={{ animation: "float 6s ease-in-out infinite" }}
+                priority
+              />
+            )}
             <style>{`
               @keyframes float {
                 0% { transform: translateY(0px) rotate(2deg); filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15)); }
