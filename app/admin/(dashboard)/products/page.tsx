@@ -14,7 +14,18 @@ export default function AdminProducts() {
   const [color, setColor] = useState('');
   const [price, setPrice] = useState('');
   const [details, setDetails] = useState('');
-  const [technicalSpecifications, setTechnicalSpecifications] = useState<{key: string, value: string}[]>([]);
+  const initialSpecs = {
+    'Display': '',
+    'Processor (CPU)': '',
+    'Graphics (GPU)': '',
+    'RAM': '',
+    'Battery': '',
+    'Storage': '',
+    'Emulator': '',
+    'Controls': '',
+    'Connectivity': ''
+  };
+  const [technicalSpecifications, setTechnicalSpecifications] = useState<Record<string, string>>(initialSpecs);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -63,9 +74,9 @@ export default function AdminProducts() {
         imageUrl = uploadData.url;
       }
 
-      const specsObject = technicalSpecifications.reduce((acc, curr) => {
-        if (curr.key.trim() && curr.value.trim()) {
-          acc[curr.key.trim()] = curr.value.trim();
+      const specsObject = Object.entries(technicalSpecifications).reduce((acc, [key, value]) => {
+        if (value.trim()) {
+          acc[key] = value.trim();
         }
         return acc;
       }, {} as Record<string, string>);
@@ -88,7 +99,7 @@ export default function AdminProducts() {
       setColor('');
       setPrice('');
       setDetails('');
-      setTechnicalSpecifications([]);
+      setTechnicalSpecifications(initialSpecs);
       setImageFile(null);
       fetchProducts();
     } catch (error) {
@@ -154,76 +165,27 @@ export default function AdminProducts() {
               </div>
 
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="block text-sm font-bold text-gray-700">Technical Specifications (Optional)</label>
-                  <button 
-                    type="button" 
-                    onClick={() => setTechnicalSpecifications([...technicalSpecifications, { key: '', value: '' }])}
-                    className="text-xs font-bold text-orange-600 hover:text-orange-700 bg-orange-100 px-3 py-1.5 rounded-lg transition-colors flex items-center space-x-1"
-                  >
-                    <span>+</span>
-                    <span>Add Spec</span>
-                  </button>
-                </div>
+                <label className="block text-sm font-bold text-gray-700 mb-3">Technical Specifications (Optional)</label>
                 
-                {technicalSpecifications.length > 0 && (
-                  <div className="space-y-3 bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-                    <datalist id="spec-titles">
-                      <option value="Display" />
-                      <option value="Processor (CPU)" />
-                      <option value="Graphics (GPU)" />
-                      <option value="RAM" />
-                      <option value="Battery" />
-                      <option value="Storage" />
-                      <option value="Emulator" />
-                      <option value="Controls" />
-                      <option value="Connectivity" />
-                    </datalist>
-                    
-                    {technicalSpecifications.map((spec, index) => (
-                      <div key={index} className="flex space-x-3 items-start">
-                        <div className="w-1/3">
-                          <input
-                            type="text"
-                            list="spec-titles"
-                            value={spec.key}
-                            onChange={(e) => {
-                              const newSpecs = [...technicalSpecifications];
-                              newSpecs[index].key = e.target.value;
-                              setTechnicalSpecifications(newSpecs);
-                            }}
-                            placeholder="Title (e.g. RAM)"
-                            className="w-full px-4 py-2.5 text-sm rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={spec.value}
-                            onChange={(e) => {
-                              const newSpecs = [...technicalSpecifications];
-                              newSpecs[index].value = e.target.value;
-                              setTechnicalSpecifications(newSpecs);
-                            }}
-                            placeholder="Value (e.g. 4GB LPDDR4)"
-                            className="w-full px-4 py-2.5 text-sm rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newSpecs = technicalSpecifications.filter((_, i) => i !== index);
-                            setTechnicalSpecifications(newSpecs);
-                          }}
-                          className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
-                          title="Remove specification"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="space-y-3 bg-gray-50/50 p-4 rounded-2xl border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-3">
+                  {Object.keys(initialSpecs).map((specKey) => (
+                    <div key={specKey} className="flex flex-col space-y-1">
+                      <label className="text-xs font-bold text-gray-500">{specKey}</label>
+                      <input
+                        type="text"
+                        value={technicalSpecifications[specKey] || ''}
+                        onChange={(e) => {
+                          setTechnicalSpecifications(prev => ({
+                            ...prev,
+                            [specKey]: e.target.value
+                          }));
+                        }}
+                        placeholder={`Enter ${specKey.toLowerCase()}...`}
+                        className="w-full px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="pt-4 flex justify-end space-x-3">
