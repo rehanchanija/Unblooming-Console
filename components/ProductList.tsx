@@ -12,7 +12,6 @@ export default function ProductList() {
   
   const [products, setProducts] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,8 +24,8 @@ export default function ProductList() {
             name: p.title || p.name,
             price: p.price,
             category: p.category,
-            color: p.color,
-            image: p.imageUrl || '',
+            variants: p.variants || [],
+            image: p.variants?.[0]?.imageUrl || p.imageUrl || '',
             description: p.details || '',
             specs: p.technicalSpecifications || {},
             createdAt: p.createdAt
@@ -42,12 +41,9 @@ export default function ProductList() {
   }, []);
 
   const categories = ['All', 'Consoles', 'Accessories'];
-  const colors = ['All', 'Red', 'Purple', 'Black'];
 
   const filteredProducts = products.filter((product) => {
-    const matchCategory = selectedCategory === null || product.category === selectedCategory;
-    const matchColor = selectedColor === null || product.color === selectedColor;
-    return matchCategory && matchColor;
+    return selectedCategory === null || product.category === selectedCategory;
   });
 
   const handleAddToCart = (e: React.MouseEvent, product: any) => {
@@ -79,24 +75,6 @@ export default function ProductList() {
                     className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${isSelected ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
                   >
                     {cat}
-                  </button>
-                );
-              })}
-            </div>
-            
-            {/* Color Filter */}
-            <div className="flex space-x-2 items-center bg-gray-100 p-2 rounded-xl h-full">
-              <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Color</span>
-              {colors.map(color => {
-                const isSelected = selectedColor === (color === 'All' ? null : color);
-                return (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color === 'All' ? null : color)}
-                    title={color}
-                    className={`w-7 h-7 rounded-full border-2 transition-all ${isSelected ? 'border-gray-900 scale-110 shadow-md' : 'border-transparent hover:scale-105'} flex items-center justify-center`}
-                  >
-                    <span className={`w-full h-full rounded-full border border-gray-200/50 ${color === 'All' ? 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]' : color === 'Red' ? 'bg-red-500' : color === 'Purple' ? 'bg-purple-500' : 'bg-gray-900'}`}></span>
                   </button>
                 );
               })}

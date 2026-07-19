@@ -27,7 +27,8 @@ export default function AdminProducts() {
   // Form State
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [color, setColor] = useState("");
+  const [variantsList, setVariantsList] = useState<{color: string, imageUrl: string}[]>([]);
+  const [variantFiles, setVariantFiles] = useState<Record<number, File>>({});
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [details, setDetails] = useState("");
@@ -53,6 +54,22 @@ export default function AdminProducts() {
     const newList = [...specificationsList];
     newList[index][field] = val;
     setSpecificationsList(newList);
+  };
+
+  const addVariant = () => {
+    setVariantsList([...variantsList, { color: "", imageUrl: "" }]);
+  };
+
+  const removeVariant = (index: number) => {
+    const newList = [...variantsList];
+    newList.splice(index, 1);
+    setVariantsList(newList);
+  };
+
+  const updateVariant = (index: number, field: "color" | "imageUrl", val: string) => {
+    const newList = [...variantsList];
+    newList[index][field] = val;
+    setVariantsList(newList);
   };
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -168,7 +185,7 @@ export default function AdminProducts() {
     setEditProductId(null);
     setTitle("");
     setCategory("");
-    setColor("");
+    setVariantsList([]);
     setPrice("");
     setStock("");
     setDetails("");
@@ -176,14 +193,15 @@ export default function AdminProducts() {
     setExistingImageUrl("");
     setImagePreview("");
     setImageFile(null);
+    setVariantFiles({});
     setIsModalOpen(false);
   };
 
   const handleEditClick = (product: any) => {
-    setEditProductId(product._id || product.id);
-    setTitle(product.title || product.name);
+    setEditProductId(product._id);
+    setTitle(product.title);
     setCategory(product.category);
-    setColor(product.color);
+    setVariantsList(product.variants || []);
     setPrice(product.price);
     setStock(product.stock !== undefined ? product.stock.toString() : "");
     setDetails(product.details || "");
@@ -245,11 +263,30 @@ export default function AdminProducts() {
       );
 
       const finalImageUrl = imageUrl || existingImageUrl;
+      
+      const finalVariantsList = [...variantsList];
+      for (let i = 0; i < finalVariantsList.length; i++) {
+        if (variantFiles[i]) {
+          const formData = new FormData();
+          formData.append("file", variantFiles[i]);
+          const uploadRes = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/upload/image`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const uploadData = await uploadRes.json();
+          if (uploadRes.ok) {
+            finalVariantsList[i].imageUrl = uploadData.url;
+          }
+        }
+      }
 
       const payload = {
         title,
         category,
-        color,
+        variants: finalVariantsList,
         price,
         stock: stock ? parseInt(stock, 10) : 0,
         details,
@@ -332,7 +369,7 @@ export default function AdminProducts() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">
                     Category
@@ -351,23 +388,66 @@ export default function AdminProducts() {
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Color
+              </div>
+
+              {/* Variants Selector */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="block text-sm font-bold text-gray-700">
+                    Product Variants (Color & Image)
                   </label>
-                  <select
-                    required
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  <button
+                    type="button"
+                    onClick={addVariant}
+                    className="text-sm font-bold text-orange-500 hover:text-orange-600 transition-colors bg-orange-50 px-3 py-1 rounded-lg"
                   >
-                    <option value="">Select Color</option>
-                    {colorsList.map((col) => (
-                      <option key={col._id} value={col.name}>
-                        {col.name}
-                      </option>
-                    ))}
-                  </select>
+                    + Add Variant
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {variantsList.map((variant, index) => (
+                    <div key={index} className="flex space-x-2">
+                      <select
+                        value={variant.color}
+                        onChange={(e) => updateVariant(index, "color", e.target.value)}
+                        className="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                      >
+                        <option value="">Select Color</option>
+                        {colorsList.map((c) => (
+                          <option key={c._id} value={c.name}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="flex-1 flex items-center space-x-2">
+                        {variant.imageUrl && (
+                          <img src={variant.imageUrl} alt="preview" className="w-10 h-10 rounded-lg object-cover bg-gray-100" />
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setVariantFiles({...variantFiles, [index]: file});
+                              updateVariant(index, "imageUrl", URL.createObjectURL(file));
+                            }
+                          }}
+                          className="flex-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 cursor-pointer"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeVariant(index)}
+                        className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors font-bold"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                  {variantsList.length === 0 && (
+                    <p className="text-xs text-gray-500 italic">No variants added yet.</p>
+                  )}
                 </div>
               </div>
 
