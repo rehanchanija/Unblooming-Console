@@ -2,14 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type CartItem = {
+export interface CartItem {
   productId: string;
   title: string;
-  price: string | number;
+  price: string;
   quantity: number;
-  imageUrl?: string;
-  color?: string;
-};
+  imageUrl: string;
+  color: string;
+}
 
 interface CartContextType {
   cart: CartItem[];
@@ -17,26 +17,28 @@ interface CartContextType {
   setIsCartOpen: (isOpen: boolean) => void;
   addToCart: (item: CartItem) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
+  cartCount: number;
   cartTotal: number;
-  itemCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
+export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Initialize session ID
     let storedUserId = localStorage.getItem('unbloom_cart_session');
     if (!storedUserId) {
       storedUserId = 'guest_' + Math.random().toString(36).substring(2, 15);
       localStorage.setItem('unbloom_cart_session', storedUserId);
     }
     setUserId(storedUserId);
+    
+    // Fetch initial cart
     fetchCart(storedUserId);
   }, []);
 
@@ -64,6 +66,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } else {
       setCart([...cart, item]);
     }
+    
     setIsCartOpen(true);
 
     try {
@@ -78,13 +81,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to add to cart", error);
-      fetchCart(userId);
+      fetchCart(userId); // Revert on failure
     }
   };
 
   const removeFromCart = async (productId: string) => {
     if (!userId) return;
+    
     setCart(cart.filter(item => item.productId !== productId));
+
     try {
       const res = await fetch(`${getApiUrl()}/cart/${userId}/${productId}`, {
         method: 'DELETE'
@@ -99,19 +104,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const updateQuantity = async (productId: string, quantity: number) => {
-    // For now we just implement optimistic update and fetch. If you need backend update, we should post it.
-    if (!userId) return;
-    if (quantity < 1) return;
-    
-    // Simplest way is to resync the item with the difference, or just override. 
-    // Since backend POST handles adding to existing quantity, let's just do optimistic update for now.
-    setCart(cart.map(i => i.productId === productId ? { ...i, quantity } : i));
-  };
-
   const clearCart = async () => {
     if (!userId) return;
+    
     setCart([]);
+
     try {
       await fetch(`${getApiUrl()}/cart/${userId}`, {
         method: 'DELETE'
@@ -122,10 +119,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   
+  // Calculate total: parse price strings (removing non-numeric except dot)
   const cartTotal = cart.reduce((total, item) => {
-    const numericPrice = typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0 : item.price;
+    const numericPrice = parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) || 0;
     return total + (numericPrice * item.quantity);
   }, 0);
 
@@ -136,20 +134,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setIsCartOpen,
       addToCart,
       removeFromCart,
-      updateQuantity,
       clearCart,
-      itemCount,
+      cartCount,
       cartTotal
     }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
 
-export function useCart() {
+export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-}
+};
