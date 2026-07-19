@@ -11,7 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { itemCount } = useCart();
+  const { itemCount, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -83,8 +83,8 @@ export default function Navbar() {
         <div className="flex w-1/3 md:w-1/4 justify-end items-center space-x-2 md:space-x-4">
           
           {/* Cart Icon */}
-          <Link 
-            href="/cart"
+          <button 
+            onClick={() => setIsCartOpen(true)}
             className="relative flex items-center justify-center p-2 text-gray-900 hover:text-orange-500 transition-colors"
           >
             <ShoppingBag size={24} strokeWidth={2.2} />
@@ -93,7 +93,7 @@ export default function Navbar() {
                 {itemCount}
               </span>
             )}
-          </Link>
+          </button>
 
           {/* Profile Icon / User Name */}
           <div className="flex items-center">

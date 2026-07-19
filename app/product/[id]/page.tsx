@@ -23,8 +23,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const handleAddToCart = () => {
-    addToCart(product);
-    router.push('/cart');
+    addToCart({
+      productId: product.id,
+      title: product.name,
+      price: product.price.toString(),
+      quantity: 1,
+      imageUrl: product.image || product.gallery[0],
+      color: product.color
+    });
   };
 
   return (

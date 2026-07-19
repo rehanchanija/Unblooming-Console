@@ -100,13 +100,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = async (productId: string, quantity: number) => {
-    // For now we just implement optimistic update and fetch. If you need backend update, we should post it.
     if (!userId) return;
     if (quantity < 1) return;
     
-    // Simplest way is to resync the item with the difference, or just override. 
-    // Since backend POST handles adding to existing quantity, let's just do optimistic update for now.
+    const existing = cart.find(i => i.productId === productId);
+    if (!existing) return;
+    
+    const difference = quantity - existing.quantity;
+    if (difference === 0) return;
+    
+    // Optimistic update
     setCart(cart.map(i => i.productId === productId ? { ...i, quantity } : i));
+
+    try {
+      const res = await fetch(`${getApiUrl()}/cart/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...existing, quantity: difference })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCart(data);
+      }
+    } catch (error) {
+      console.error("Failed to update quantity", error);
+      fetchCart(userId);
+    }
   };
 
   const clearCart = async () => {

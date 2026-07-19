@@ -5,7 +5,7 @@ import { useCart } from '../lib/CartContext';
 import Link from 'next/link';
 
 export default function CartDrawer() {
-  const { cart, isCartOpen, setIsCartOpen, removeFromCart, cartTotal } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal } = useCart();
 
   if (!isCartOpen) return null;
 
@@ -43,14 +43,32 @@ export default function CartDrawer() {
                     <h3 className="font-bold text-gray-900 leading-tight">{item.title}</h3>
                     <p className="text-sm text-gray-500 font-medium mt-1">Color: {item.color}</p>
                   </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <p className="font-black text-orange-500">{item.price} × {item.quantity}</p>
-                    <button 
-                      onClick={() => removeFromCart(item.productId)}
-                      className="text-gray-400 hover:text-red-500 transition-colors text-sm font-bold bg-white px-2 py-1 rounded-lg border border-gray-100 hover:border-red-100"
-                    >
-                      Remove
-                    </button>
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+                      <button 
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                        className="px-3 py-1 text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center font-bold text-sm border-x border-gray-200 py-1">{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        className="px-3 py-1 text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <p className="font-black text-orange-500">{item.price}</p>
+                      <button 
+                        onClick={() => removeFromCart(item.productId)}
+                        className="text-gray-400 hover:text-red-500 transition-colors text-sm font-bold bg-white px-2 py-1 rounded-lg border border-gray-100 hover:border-red-100"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
