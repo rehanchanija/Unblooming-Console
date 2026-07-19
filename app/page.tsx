@@ -18,11 +18,17 @@ export default function SinglePageStore() {
   useEffect(() => {
     const fetchHeroProduct = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/products`,
+        );
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            data.sort(
+              (a: any, b: any) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            );
             setHeroProduct(data[0]);
           }
         }
@@ -65,7 +71,9 @@ export default function SinglePageStore() {
               {heroProduct && (
                 <button
                   onClick={() => {
-                    router.push(`/product/${heroProduct._id || heroProduct.id}`);
+                    router.push(
+                      `/product/${heroProduct._id || heroProduct.id}`,
+                    );
                   }}
                   className="bg-gray-900 hover:bg-orange-500 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transition-all transform hover:-translate-y-1"
                 >
@@ -78,7 +86,11 @@ export default function SinglePageStore() {
           <div className="relative aspect-square md:aspect-[4/5] w-full max-w-md mx-auto order-1 md:order-2 mb-8 md:mb-0">
             {heroProduct && (
               <Image
-                src={heroProduct.imageUrl || heroProduct.variants?.[0]?.imageUrl || ""}
+                src={
+                  heroProduct.imageUrl ||
+                  heroProduct.variants?.[0]?.imageUrl ||
+                  ""
+                }
                 alt={heroProduct.title || "Product Image"}
                 fill
                 className="object-contain"
@@ -296,7 +308,6 @@ export default function SinglePageStore() {
             </div>
           </div>
 
-          {/* Contact */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <h5 className="font-bold text-gray-900">Contact Us</h5>
@@ -319,15 +330,6 @@ export default function SinglePageStore() {
                 <span className="text-lg">📞</span>
                 <span>+91 62655 62258</span>
               </a>
-              {/* <div className="flex items-center space-x-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                <span className="text-lg shrink-0">📍</span>
-                <span
-                  className="truncate"
-                  title="Sadar Bazar, Bhatapara, Raipur, Chhattisgarh"
-                >
-                  Sadar Bazar, Bhatapara, Raipur, Chhattisgarh
-                </span>
-              </div> */}
             </div>
           </div>
         </div>

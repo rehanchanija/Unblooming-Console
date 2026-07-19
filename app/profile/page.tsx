@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer/Footer";
+import Footer from "@/components/Footer";
 
 export default function ProfilePage() {
   const { user, logout, updateUser } = useAuth();

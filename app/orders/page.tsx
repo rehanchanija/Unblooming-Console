@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer/Footer';
+import Footer from '@/components/Footer';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function OrdersPage() {
