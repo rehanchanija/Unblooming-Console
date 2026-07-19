@@ -14,6 +14,7 @@ export default function AdminProducts() {
   const [color, setColor] = useState('');
   const [price, setPrice] = useState('');
   const [details, setDetails] = useState('');
+  const [technicalSpecifications, setTechnicalSpecifications] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function AdminProducts() {
         const formData = new FormData();
         formData.append('file', imageFile);
 
-        const uploadRes = await fetch('http://localhost:3001/upload/image', {
+        const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/upload/image`, {
           method: 'POST',
           body: formData,
         });
@@ -69,6 +70,7 @@ export default function AdminProducts() {
         color,
         price,
         details,
+        technicalSpecifications,
         imageUrl,
       });
 
@@ -79,6 +81,7 @@ export default function AdminProducts() {
       setColor('');
       setPrice('');
       setDetails('');
+      setTechnicalSpecifications('');
       setImageFile(null);
       fetchProducts();
     } catch (error) {
@@ -141,6 +144,11 @@ export default function AdminProducts() {
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Details (Optional)</label>
                 <textarea value={details} onChange={e => setDetails(e.target.value)} rows={3} className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none"></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Technical Specifications (Optional)</label>
+                <textarea value={technicalSpecifications} onChange={e => setTechnicalSpecifications(e.target.value)} rows={3} placeholder="e.g. 4.0-inch IPS, Rockchip RK3326..." className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:outline-none"></textarea>
               </div>
 
               <div className="pt-4 flex justify-end space-x-3">

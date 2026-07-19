@@ -51,7 +51,7 @@ export default function AdminHero() {
         const formData = new FormData();
         formData.append('file', imageFile);
 
-        const uploadRes = await fetch('http://localhost:3001/upload/image', {
+        const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/upload/image`, {
           method: 'POST',
           body: formData,
         });
