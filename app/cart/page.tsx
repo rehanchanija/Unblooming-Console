@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
-  const { cart: items, removeFromCart, cartTotal, itemCount } = useCart();
+  const { cart: items, removeFromCart, updateQuantity, cartTotal, itemCount } = useCart();
   const router = useRouter();
 
   if (itemCount === 0) {
@@ -40,7 +40,22 @@ export default function CartPage() {
                 <div className="sm:ml-6 flex-grow text-center sm:text-left w-full">
                   <h3 className="font-bold text-xl text-gray-900 mb-2">{item.title}</h3>
                   <div className="flex justify-between items-center mt-4 sm:mt-8">
-                    <span className="font-medium text-gray-500">Qty: {item.quantity}</span>
+                    <div className="flex items-center space-x-2 bg-gray-50 border border-gray-100 rounded-lg p-1">
+                      <button 
+                        onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}
+                        className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-white hover:text-gray-900 rounded shadow-sm transition-all disabled:opacity-50 disabled:hover:bg-transparent"
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-gray-900 min-w-[20px] text-center">{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-white hover:text-gray-900 rounded shadow-sm transition-all"
+                      >
+                        +
+                      </button>
+                    </div>
                     <span className="font-black text-2xl text-gray-900">₹{numericPrice * item.quantity}</span>
                   </div>
                 </div>
