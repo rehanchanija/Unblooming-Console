@@ -10,15 +10,15 @@ export default function ProductList() {
   const { addToCart } = useCart();
   const router = useRouter();
   
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedColor, setSelectedColor] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   const categories = ['All', 'Consoles', 'Accessories'];
   const colors = ['All', 'Red', 'Purple', 'Black'];
 
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
-    const matchCategory = selectedCategory === 'All' || product.category === selectedCategory;
-    const matchColor = selectedColor === 'All' || product.color === selectedColor;
+    const matchCategory = selectedCategory === null || product.category === selectedCategory;
+    const matchColor = selectedColor === null || product.color === selectedColor;
     return matchCategory && matchColor;
   });
 
@@ -42,30 +42,36 @@ export default function ProductList() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full md:w-auto overflow-hidden">
             {/* Category Filter */}
             <div className="flex space-x-2 bg-gray-100 p-1 rounded-xl w-full overflow-x-auto hide-scrollbar">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${selectedCategory === cat ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                >
-                  {cat}
-                </button>
-              ))}
+              {categories.map(cat => {
+                const isSelected = selectedCategory === (cat === 'All' ? null : cat);
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat === 'All' ? null : cat)}
+                    className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${isSelected ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
             </div>
             
             {/* Color Filter */}
             <div className="flex space-x-2 items-center bg-gray-100 p-2 rounded-xl h-full">
               <span className="text-xs font-bold text-gray-400 mr-1 uppercase">Color</span>
-              {colors.map(color => (
-                <button
-                  key={color}
-                  onClick={() => setSelectedColor(color)}
-                  title={color}
-                  className={`w-7 h-7 rounded-full border-2 transition-all ${selectedColor === color ? 'border-gray-900 scale-110 shadow-md' : 'border-transparent hover:scale-105'} flex items-center justify-center`}
-                >
-                  <span className={`w-full h-full rounded-full border border-gray-200/50 ${color === 'All' ? 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]' : color === 'Red' ? 'bg-red-500' : color === 'Purple' ? 'bg-purple-500' : 'bg-gray-900'}`}></span>
-                </button>
-              ))}
+              {colors.map(color => {
+                const isSelected = selectedColor === (color === 'All' ? null : color);
+                return (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color === 'All' ? null : color)}
+                    title={color}
+                    className={`w-7 h-7 rounded-full border-2 transition-all ${isSelected ? 'border-gray-900 scale-110 shadow-md' : 'border-transparent hover:scale-105'} flex items-center justify-center`}
+                  >
+                    <span className={`w-full h-full rounded-full border border-gray-200/50 ${color === 'All' ? 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]' : color === 'Red' ? 'bg-red-500' : color === 'Purple' ? 'bg-purple-500' : 'bg-gray-900'}`}></span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
